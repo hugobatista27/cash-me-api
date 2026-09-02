@@ -20,6 +20,8 @@ router
     router
       .group(() => {
         router.post('signup', [controllers.NewAccount, 'store'])
+        router.post('customer/signup', [controllers.UserCustomers, 'store'])
+        router.post('establishment/signup', [controllers.UserEstablishments, 'store'])
         router.post('login', [controllers.AccessTokens, 'store'])
       })
       .prefix('auth')
@@ -28,6 +30,10 @@ router
     router
       .group(() => {
         router.get('profile', [controllers.Profile, 'show'])
+        router.get('customer/profile', [controllers.UserCustomers, 'show'])
+        router.put('customer/profile', [controllers.UserCustomers, 'update'])
+        router.get('establishment/profile', [controllers.UserEstablishments, 'show'])
+        router.put('establishment/profile', [controllers.UserEstablishments, 'update'])
         router.post('logout', [controllers.AccessTokens, 'destroy'])
       })
       .prefix('account')
