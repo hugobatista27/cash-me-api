@@ -32,19 +32,69 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class UserCustomerSchema extends BaseModel {
+  static $columns = ['authProvider', 'cpf', 'createdAt', 'deviceToken', 'fullName', 'id', 'phone', 'socialId', 'termsAcceptedAt', 'updatedAt', 'userId'] as const
+  $columns = UserCustomerSchema.$columns
+  @column()
+  declare authProvider: string
+  @column()
+  declare cpf: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare deviceToken: string | null
+  @column()
+  declare fullName: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare phone: string | null
+  @column()
+  declare socialId: string | null
+  @column.dateTime()
+  declare termsAcceptedAt: DateTime | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
+export class UserEstablishmentSchema extends BaseModel {
+  static $columns = ['createdAt', 'establishmentId', 'fullName', 'id', 'role', 'updatedAt', 'userId'] as const
+  $columns = UserEstablishmentSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare establishmentId: number | null
+  @column()
+  declare fullName: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare role: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'fullName', 'id', 'password', 'updatedAt'] as const
+  static $columns = ['createdAt', 'email', 'id', 'lastLoginAt', 'password', 'status', 'updatedAt', 'userType'] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
   declare email: string
-  @column()
-  declare fullName: string | null
   @column({ isPrimary: true })
   declare id: number
+  @column.dateTime()
+  declare lastLoginAt: DateTime | null
   @column({ serializeAs: null })
   declare password: string
+  @column()
+  declare status: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare userType: string
 }
