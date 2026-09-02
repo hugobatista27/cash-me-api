@@ -8,15 +8,18 @@ Este documento especifica a modelagem relacional do banco de dados PostgreSQL pa
 
 ```mermaid
 erDiagram
-    ESTABELECIMENTOS ||--o{ USERS : "possui (equipe)"
+    USERS ||--o| USER_ESTABLISHMENTS : "possui perfil lojista (1:1)"
+    USERS ||--o| USER_CUSTOMERS : "possui perfil consumidor (1:1)"
+
+    ESTABELECIMENTOS ||--o{ USER_ESTABLISHMENTS : "possui colaboradores (equipe)"
     ESTABELECIMENTOS ||--o{ NFCES : "emite notas"
     ESTABELECIMENTOS ||--o{ SALDOS_PONTOS : "mantém saldos dos clientes"
     ESTABELECIMENTOS ||--o{ EXTRATOS_PONTOS : "gera extrato de pontos"
     
-    CONSUMIDORES ||--o{ NFCES : "escaneia notas"
-    CONSUMIDORES ||--o{ SALDOS_PONTOS : "acumula pontos por lojista"
-    CONSUMIDORES ||--o{ EXTRATOS_PONTOS : "histórico transacional"
-    CONSUMIDORES ||--o{ NOTIFICACOES_PUSH : "recebe notificações"
+    USER_CUSTOMERS ||--o{ NFCES : "escaneia notas"
+    USER_CUSTOMERS ||--o{ SALDOS_PONTOS : "acumula pontos por lojista"
+    USER_CUSTOMERS ||--o{ EXTRATOS_PONTOS : "histórico transacional"
+    USER_CUSTOMERS ||--o{ NOTIFICACOES_PUSH : "recebe notificações"
     
     NFCES ||--o{ NFC_E_ITENS : "contém itens"
     NFCES ||--o| EXTRATOS_PONTOS : "origina crédito"
@@ -35,31 +38,42 @@ erDiagram
 
     USERS {
         bigint id PK
-        bigint estabelecimento_id FK "Nullable para SUPER_ADMIN"
-        string full_name
         string email UK
-        string password
+        string password "Hash Adonis"
+        string user_type "ESTABLISHMENT | CUSTOMER | SUPER_ADMIN"
+        string status "ACTIVE | INACTIVE | BLOCKED"
+        timestamp last_login_at "Nullable"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    USER_ESTABLISHMENTS {
+        bigint id PK
+        bigint user_id FK "UNIQUE"
+        bigint estabelecimento_id FK "Nullable (para SUPER_ADMIN)"
+        string full_name
         string role "SUPER_ADMIN | LOJISTA_ADMIN | LOJISTA_OPERADOR"
         timestamp created_at
         timestamp updated_at
     }
 
-    CONSUMIDORES {
+    USER_CUSTOMERS {
         bigint id PK
-        string nome
-        string email UK
+        bigint user_id FK "UNIQUE"
+        string full_name
         string cpf UK "Nullable"
-        string telefone "Nullable"
-        timestamp termos_aceitos_em "RN08 / Conta Global"
+        string phone "Nullable"
+        string auth_provider "LOCAL | GOOGLE | APPLE"
+        string social_id "Nullable"
+        timestamp terms_accepted_at "RN08 / Conta Global"
         string device_token "FCM Push Token"
-        string status "ATIVO | INATIVO"
         timestamp created_at
         timestamp updated_at
     }
 
     NFCES {
         bigint id PK
-        bigint consumidor_id FK
+        bigint consumidor_id FK "FK -> user_customers.id"
         bigint estabelecimento_id FK "Nullable até o match de CNPJ"
         string chave_acesso UK "44 dígitos (Anti-fraude)"
         text url_qr_code
@@ -86,7 +100,7 @@ erDiagram
 
     SALDOS_PONTOS {
         bigint id PK
-        bigint consumidor_id FK
+        bigint consumidor_id FK "FK -> user_customers.id"
         bigint estabelecimento_id FK
         decimal saldo_atual "Saldo disponível"
         decimal total_acumulado "Histórico acumulado"
@@ -96,7 +110,7 @@ erDiagram
 
     EXTRATOS_PONTOS {
         bigint id PK
-        bigint consumidor_id FK
+        bigint consumidor_id FK "FK -> user_customers.id"
         bigint estabelecimento_id FK
         bigint nfce_id FK "Nullable"
         string tipo "CREDITO | DEBITO | ESTORNO"
@@ -109,7 +123,7 @@ erDiagram
 
     NOTIFICACOES_PUSH {
         bigint id PK
-        bigint consumidor_id FK
+        bigint consumidor_id FK "FK -> user_customers.id"
         bigint nfce_id FK "Nullable"
         string titulo
         text mensagem
@@ -134,32 +148,42 @@ Representa as empresas jurídicas parceiras do ecossistema.
 - `fator_conversao` (DECIMAL(10,4), NOT NULL, DEFAULT `1.0000`): Fator de conversão configurável (ex: R$ 1,00 = 1 ponto -> `1.0000`, R$ 10,00 = 1 ponto -> `0.1000`) (RN04 / Task #6).
 - `created_at` / `updated_at` (TIMESTAMPTZ)
 
-### 2.2 `users` (Usuários do Painel Admin)
-Usuários administrativos do sistema (Super Admin e operadores do Lojista).
+### 2.2 `users` (Tabela Central de Credenciais e Identidade AdonisJS)
+Entidade de identidade única utilizada pelo sistema de autenticação nativo do AdonisJS (`@adonisjs/auth`).
 - `id` (PK, Serial)
-- `estabelecimento_id` (FK -> `estabelecimentos.id`, NULLABLE): `NULL` para usuários da plataforma (`SUPER_ADMIN`). Preenchido para lojistas.
-- `full_name` (VARCHAR(255), NULLABLE)
-- `email` (VARCHAR(255), UNIQUE, NOT NULL)
-- `password` (VARCHAR(255), NOT NULL)
+- `email` (VARCHAR(254), UNIQUE, NOT NULL): E-mail de login unificado.
+- `password` (VARCHAR(255), NOT NULL): Hash de senha gerenciado pelo AdonisJS Hash Service.
+- `user_type` (VARCHAR(30), NOT NULL, DEFAULT `'CUSTOMER'`): Tipo do usuário (`'ESTABLISHMENT'`, `'CUSTOMER'`, `'SUPER_ADMIN'`).
+- `status` (VARCHAR(20), NOT NULL, DEFAULT `'ACTIVE'`): (`'ACTIVE'`, `'INACTIVE'`, `'BLOCKED'`).
+- `last_login_at` (TIMESTAMPTZ, NULLABLE): Data/hora do último acesso realizado.
+- `created_at` / `updated_at` (TIMESTAMPTZ)
+
+### 2.3 `user_establishments` (Perfil de Usuários do Painel Lojista / Admin)
+Perfil associado a usuários do tipo lojista/administrador.
+- `id` (PK, Serial)
+- `user_id` (FK -> `users.id`, UNIQUE, NOT NULL): Chave estrangeira 1:1 com a identidade em `users`.
+- `establishment_id` (FK -> `estabelecimentos.id`, NULLABLE): `NULL` para usuários da plataforma (`SUPER_ADMIN`). Preenchido para lojistas.
+- `full_name` (VARCHAR(255), NOT NULL)
 - `role` (VARCHAR(50), NOT NULL, DEFAULT `'LOJISTA_ADMIN'`): (`'SUPER_ADMIN'`, `'LOJISTA_ADMIN'`, `'LOJISTA_OPERADOR'`).
 - `created_at` / `updated_at` (TIMESTAMPTZ)
 
-### 2.3 `consumidores` (Conta Global do Consumidor)
-Conta unificada dos clientes finais no App Mobile (Glossário: Conta Global / Task #2).
+### 2.4 `user_customers` (Perfil de Conta Global do Consumidor Mobile)
+Perfil do cliente final no aplicativo mobile (Glossário: Conta Global / Task #2).
 - `id` (PK, Serial)
-- `nome` (VARCHAR(255), NOT NULL)
-- `email` (VARCHAR(255), UNIQUE, NOT NULL)
+- `user_id` (FK -> `users.id`, UNIQUE, NOT NULL): Chave estrangeira 1:1 com a identidade em `users`.
+- `full_name` (VARCHAR(255), NOT NULL)
 - `cpf` (VARCHAR(11), UNIQUE, NULLABLE)
-- `telefone` (VARCHAR(20), NULLABLE)
-- `termos_aceitos_em` (TIMESTAMPTZ, NOT NULL): Registro de aceite dos Termos Globais.
+- `phone` (VARCHAR(20), NULLABLE)
+- `auth_provider` (VARCHAR(50), NOT NULL, DEFAULT `'LOCAL'`): Provedor de auth (`'LOCAL'`, `'GOOGLE'`, `'APPLE'`).
+- `social_id` (VARCHAR(255), NULLABLE): ID retornado pelo provedor social.
+- `terms_accepted_at` (TIMESTAMPTZ, NULLABLE): Registro de aceite dos Termos Globais.
 - `device_token` (VARCHAR(255), NULLABLE): Token do Firebase (FCM) para Notificações Push (Task #9).
-- `status` (VARCHAR(20), NOT NULL, DEFAULT `'ATIVO'`): (`'ATIVO'`, `'INATIVO'`).
 - `created_at` / `updated_at` (TIMESTAMPTZ)
 
-### 2.4 `nfces` (Notas Fiscais Processadas)
+### 2.5 `nfces` (Notas Fiscais Processadas)
 Armazena a tentativa e o resultado da leitura da NFC-e (Tasks #3 e #4).
 - `id` (PK, Serial)
-- `consumidor_id` (FK -> `consumidores.id`, NOT NULL)
+- `consumidor_id` (FK -> `user_customers.id`, NOT NULL)
 - `estabelecimento_id` (FK -> `estabelecimentos.id`, NULLABLE): Preenchido após identificação do lojista via CNPJ.
 - `chave_acesso` (VARCHAR(44), UNIQUE, NOT NULL): Chave de 44 dígitos da SEFAZ (RN02 - Anti-Fraude).
 - `url_qr_code` (TEXT, NOT NULL)
@@ -172,7 +196,7 @@ Armazena a tentativa e o resultado da leitura da NFC-e (Tasks #3 e #4).
 - `motivo_rejeicao` (TEXT, NULLABLE): Motivo em caso de erro ou rejeição (ex: `'EXPIRADO_48H'`, `'FORA_ESTADO_ALVO'`, `'LOJISTA_INATIVO'`, `'CHAVE_DUPLICADA'`).
 - `created_at` / `updated_at` (TIMESTAMPTZ)
 
-### 2.5 `nfce_itens` (Itens Extraídos da Nota)
+### 2.6 `nfce_itens` (Itens Extraídos da Nota)
 Itens individuais extraídos da NFC-e durante o scraping.
 - `id` (PK, Serial)
 - `nfce_id` (FK -> `nfces.id` ON DELETE CASCADE, NOT NULL)
@@ -182,20 +206,20 @@ Itens individuais extraídos da NFC-e durante o scraping.
 - `valor_total` (DECIMAL(10,2), NOT NULL)
 - `created_at` (TIMESTAMPTZ)
 
-### 2.6 `saldos_pontos` (Saldo Histórico Multi-Tenant por Estabelecimento)
+### 2.7 `saldos_pontos` (Saldo Histórico Multi-Tenant por Estabelecimento)
 Saldo consolidado de um consumidor em um lojista específico (ADR-002 & RN05 & RN08).
 - `id` (PK, Serial)
-- `consumidor_id` (FK -> `consumidores.id`, NOT NULL)
+- `consumidor_id` (FK -> `user_customers.id`, NOT NULL)
 - `estabelecimento_id` (FK -> `estabelecimentos.id`, NOT NULL)
 - `saldo_atual` (DECIMAL(10,2), NOT NULL, DEFAULT `0.00`)
 - `total_acumulado` (DECIMAL(10,2), NOT NULL, DEFAULT `0.00`)
 - `created_at` / `updated_at` (TIMESTAMPTZ)
 - **Constraint Única:** `UNIQUE (consumidor_id, estabelecimento_id)` — Garante apenas 1 registro de saldo por cliente/tenant.
 
-### 2.7 `extratos_pontos` (Ledger / Histórico de Transações)
+### 2.8 `extratos_pontos` (Ledger / Histórico de Transações)
 Log imutável de movimentações de pontos (Task #5 & RN05).
 - `id` (PK, Serial)
-- `consumidor_id` (FK -> `consumidores.id`, NOT NULL)
+- `consumidor_id` (FK -> `user_customers.id`, NOT NULL)
 - `estabelecimento_id` (FK -> `estabelecimentos.id`, NOT NULL)
 - `nfce_id` (FK -> `nfces.id`, NULLABLE)
 - `tipo` (VARCHAR(20), NOT NULL): (`'CREDITO'`, `'DEBITO'`, `'ESTORNO'`).
@@ -205,10 +229,10 @@ Log imutável de movimentações de pontos (Task #5 & RN05).
 - `descricao` (VARCHAR(255), NOT NULL)
 - `created_at` (TIMESTAMPTZ)
 
-### 2.8 `notificacoes_push` (Registro de Notificações Transacionais)
+### 2.9 `notificacoes_push` (Registro de Notificações Transacionais)
 Histórico de notificações push via FCM (Task #9).
 - `id` (PK, Serial)
-- `consumidor_id` (FK -> `consumidores.id`, NOT NULL)
+- `consumidor_id` (FK -> `user_customers.id`, NOT NULL)
 - `nfce_id` (FK -> `nfces.id`, NULLABLE)
 - `titulo` (VARCHAR(255), NOT NULL)
 - `mensagem` (TEXT, NOT NULL)
