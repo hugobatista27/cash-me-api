@@ -11,8 +11,21 @@ import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
 
+import AutoSwagger from 'adonis-autoswagger'
+import swagger from '#config/swagger'
+
 router.get('/', () => {
   return { hello: 'world' }
+})
+
+// Retorna a especificação OpenAPI (JSON)
+router.get('/swagger', async () => {
+  return AutoSwagger.default.docs(router.toJSON(), swagger)
+})
+
+// Interface gráfica do Swagger UI
+router.get('/docs', async () => {
+  return AutoSwagger.default.ui('/swagger', swagger)
 })
 
 router
