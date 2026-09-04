@@ -4,6 +4,12 @@ import type { HttpContext } from '@adonisjs/core/http'
 import UserTransformer from '#transformers/user_transformer'
 
 export default class AccessTokensController {
+  /**
+   * @store
+   * @summary Autenticar usuário (Login)
+   * @requestBody {"email": "user@example.com", "password": "password123"}
+   * @responseBody 200 - {"user": {"id": 1, "email": "user@example.com", "userType": "CUSTOMER", "status": "ACTIVE"}, "token": "oat_..."}
+   */
   async store({ request, serialize }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
 
@@ -16,6 +22,11 @@ export default class AccessTokensController {
     })
   }
 
+  /**
+   * @destroy
+   * @summary Encerrar sessão (Logout)
+   * @responseBody 200 - {"message": "Logged out successfully"}
+   */
   async destroy({ auth }: HttpContext) {
     const user = auth.getUserOrFail()
     if (user.currentAccessToken) {

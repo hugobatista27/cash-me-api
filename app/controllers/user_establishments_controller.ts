@@ -7,7 +7,10 @@ import UserEstablishmentTransformer from '#transformers/user_establishment_trans
 
 export default class UserEstablishmentsController {
   /**
-   * Register a new establishment user account (User + UserEstablishment profile)
+   * @store
+   * @summary Cadastrar novo Lojista/Estabelecimento
+   * @requestBody {"fullName": "Carlos Lojista", "email": "carlos@loja.com", "password": "password123", "passwordConfirmation": "password123", "role": "LOJISTA_ADMIN"}
+   * @responseBody 201 - {"user": {"id": 1, "email": "carlos@loja.com", "userType": "ESTABLISHMENT", "status": "ACTIVE"}, "profile": {"id": 1, "fullName": "Carlos Lojista", "role": "LOJISTA_ADMIN"}, "token": "oat_..."}
    */
   async store({ request, serialize }: HttpContext) {
     const payload = await request.validateUsing(signupEstablishmentValidator)
@@ -36,7 +39,9 @@ export default class UserEstablishmentsController {
   }
 
   /**
-   * Get current authenticated establishment user profile
+   * @show
+   * @summary Obter perfil do Lojista autenticado
+   * @responseBody 200 - {"user": {"id": 1, "email": "carlos@loja.com"}, "profile": {"id": 1, "fullName": "Carlos Lojista", "role": "LOJISTA_ADMIN"}}
    */
   async show({ auth, serialize, response }: HttpContext) {
     const user = auth.getUserOrFail()
@@ -53,7 +58,10 @@ export default class UserEstablishmentsController {
   }
 
   /**
-   * Update authenticated establishment user profile
+   * @update
+   * @summary Atualizar perfil do Lojista autenticado
+   * @requestBody {"fullName": "Carlos Silva Lojista", "role": "LOJISTA_ADMIN"}
+   * @responseBody 200 - {"profile": {"id": 1, "fullName": "Carlos Silva Lojista", "role": "LOJISTA_ADMIN"}}
    */
   async update({ auth, request, serialize, response }: HttpContext) {
     const user = auth.getUserOrFail()
