@@ -66,6 +66,60 @@ const routes = {
     tokens: [{"old":"/api/v1/account/logout","type":0,"val":"api","end":""},{"old":"/api/v1/account/logout","type":0,"val":"v1","end":""},{"old":"/api/v1/account/logout","type":0,"val":"account","end":""},{"old":"/api/v1/account/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['profile.access_tokens.destroy']['types'],
   },
+  'customer.customer_invoices.process': {
+    methods: ["POST"],
+    pattern: '/api/v1/customer/invoices/process',
+    tokens: [{"old":"/api/v1/customer/invoices/process","type":0,"val":"api","end":""},{"old":"/api/v1/customer/invoices/process","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/invoices/process","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/invoices/process","type":0,"val":"invoices","end":""},{"old":"/api/v1/customer/invoices/process","type":0,"val":"process","end":""}],
+    types: placeholder as Registry['customer.customer_invoices.process']['types'],
+  },
+  'customer.customer_invoices.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/customer/invoices',
+    tokens: [{"old":"/api/v1/customer/invoices","type":0,"val":"api","end":""},{"old":"/api/v1/customer/invoices","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/invoices","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/invoices","type":0,"val":"invoices","end":""}],
+    types: placeholder as Registry['customer.customer_invoices.index']['types'],
+  },
+  'customer.customer_invoices.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/customer/invoices/:id',
+    tokens: [{"old":"/api/v1/customer/invoices/:id","type":0,"val":"api","end":""},{"old":"/api/v1/customer/invoices/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/invoices/:id","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/invoices/:id","type":0,"val":"invoices","end":""},{"old":"/api/v1/customer/invoices/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['customer.customer_invoices.show']['types'],
+  },
+  'customer.customer_points.balances': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/customer/balances',
+    tokens: [{"old":"/api/v1/customer/balances","type":0,"val":"api","end":""},{"old":"/api/v1/customer/balances","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/balances","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/balances","type":0,"val":"balances","end":""}],
+    types: placeholder as Registry['customer.customer_points.balances']['types'],
+  },
+  'customer.customer_points.statement': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/customer/establishments/:establishmentId/statement',
+    tokens: [{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"api","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"establishments","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":1,"val":"establishmentId","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"statement","end":""}],
+    types: placeholder as Registry['customer.customer_points.statement']['types'],
+  },
+  'establishments.establishments.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishments',
+    tokens: [{"old":"/api/v1/establishments","type":0,"val":"api","end":""},{"old":"/api/v1/establishments","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments","type":0,"val":"establishments","end":""}],
+    types: placeholder as Registry['establishments.establishments.index']['types'],
+  },
+  'establishments.establishments.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishments/:id',
+    tokens: [{"old":"/api/v1/establishments/:id","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['establishments.establishments.show']['types'],
+  },
+  'establishments.establishments.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/establishments',
+    tokens: [{"old":"/api/v1/establishments","type":0,"val":"api","end":""},{"old":"/api/v1/establishments","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments","type":0,"val":"establishments","end":""}],
+    types: placeholder as Registry['establishments.establishments.store']['types'],
+  },
+  'establishments.establishments.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/establishments/:id',
+    tokens: [{"old":"/api/v1/establishments/:id","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['establishments.establishments.update']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

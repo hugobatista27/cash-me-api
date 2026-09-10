@@ -32,4 +32,23 @@ export interface ApiDefinition {
       destroy: typeof routes['profile.access_tokens.destroy']
     }
   }
+  customer: {
+    customerInvoices: {
+      process: typeof routes['customer.customer_invoices.process']
+      index: typeof routes['customer.customer_invoices.index']
+      show: typeof routes['customer.customer_invoices.show']
+    }
+    customerPoints: {
+      balances: typeof routes['customer.customer_points.balances']
+      statement: typeof routes['customer.customer_points.statement']
+    }
+  }
+  establishments: {
+    establishments: {
+      index: typeof routes['establishments.establishments.index']
+      show: typeof routes['establishments.establishments.show']
+      store: typeof routes['establishments.establishments.store']
+      update: typeof routes['establishments.establishments.update']
+    }
+  }
 }

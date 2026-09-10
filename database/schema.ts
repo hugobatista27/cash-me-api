@@ -32,6 +32,125 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class EstablishmentSchema extends BaseModel {
+  static $columns = ['cnpj', 'conversionFactor', 'createdAt', 'id', 'legalName', 'status', 'tradeName', 'updatedAt'] as const
+  $columns = EstablishmentSchema.$columns
+  @column()
+  declare cnpj: string
+  @column()
+  declare conversionFactor: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare legalName: string
+  @column()
+  declare status: string
+  @column()
+  declare tradeName: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class InvoiceItemSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'invoiceId', 'quantity', 'rawDescription', 'totalPrice', 'unitPrice'] as const
+  $columns = InvoiceItemSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare invoiceId: number
+  @column()
+  declare quantity: number
+  @column()
+  declare rawDescription: string
+  @column()
+  declare totalPrice: number
+  @column()
+  declare unitPrice: number
+}
+
+export class InvoiceSchema extends BaseModel {
+  static $columns = ['accessKey', 'createdAt', 'customerId', 'establishmentId', 'id', 'issuedAt', 'issuerCnpj', 'issuerState', 'pointsAwarded', 'qrCodeUrl', 'rejectionReason', 'status', 'totalAmount', 'updatedAt'] as const
+  $columns = InvoiceSchema.$columns
+  @column()
+  declare accessKey: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column()
+  declare establishmentId: number | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime()
+  declare issuedAt: DateTime
+  @column()
+  declare issuerCnpj: string
+  @column()
+  declare issuerState: string
+  @column()
+  declare pointsAwarded: number
+  @column()
+  declare qrCodeUrl: string
+  @column()
+  declare rejectionReason: string | null
+  @column()
+  declare status: string
+  @column()
+  declare totalAmount: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PointBalanceSchema extends BaseModel {
+  static $columns = ['createdAt', 'currentBalance', 'customerId', 'establishmentId', 'id', 'totalAccumulated', 'updatedAt'] as const
+  $columns = PointBalanceSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare currentBalance: number
+  @column()
+  declare customerId: number
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare totalAccumulated: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PointTransactionSchema extends BaseModel {
+  static $columns = ['appliedConversionFactor', 'createdAt', 'customerId', 'description', 'establishmentId', 'id', 'invoiceId', 'metadata', 'points', 'purchaseAmount', 'type'] as const
+  $columns = PointTransactionSchema.$columns
+  @column()
+  declare appliedConversionFactor: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column()
+  declare description: string
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare invoiceId: number | null
+  @column()
+  declare metadata: any | null
+  @column()
+  declare points: number
+  @column()
+  declare purchaseAmount: number | null
+  @column()
+  declare type: string
+}
+
 export class UserCustomerSchema extends BaseModel {
   static $columns = ['authProvider', 'cpf', 'createdAt', 'deviceToken', 'fullName', 'id', 'phone', 'socialId', 'termsAcceptedAt', 'updatedAt', 'userId'] as const
   $columns = UserCustomerSchema.$columns

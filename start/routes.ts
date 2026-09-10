@@ -28,6 +28,10 @@ router.get('/docs', async () => {
   return AutoSwagger.default.ui('/swagger', swagger)
 })
 
+const CustomerInvoicesController = () => import('#controllers/customer_invoices_controller')
+const CustomerPointsController = () => import('#controllers/customer_points_controller')
+const EstablishmentsController = () => import('#controllers/establishments_controller')
+
 router
   .group(() => {
     router
@@ -52,5 +56,30 @@ router
       .prefix('account')
       .as('profile')
       .use(middleware.auth())
+
+    // Rotas do Consumidor (NFC-e e Pontos)
+    router
+      .group(() => {
+        router.post('invoices/process', [CustomerInvoicesController, 'process'])
+        router.get('invoices', [CustomerInvoicesController, 'index'])
+        router.get('invoices/:id', [CustomerInvoicesController, 'show'])
+        router.get('balances', [CustomerPointsController, 'balances'])
+        router.get('establishments/:establishmentId/statement', [CustomerPointsController, 'statement'])
+      })
+      .prefix('customer')
+      .as('customer')
+      .use(middleware.auth())
+
+    // Rotas de Estabelecimentos
+    router
+      .group(() => {
+        router.get('/', [EstablishmentsController, 'index'])
+        router.get('/:id', [EstablishmentsController, 'show'])
+        router.post('/', [EstablishmentsController, 'store'])
+        router.put('/:id', [EstablishmentsController, 'update'])
+      })
+      .prefix('establishments')
+      .as('establishments')
   })
   .prefix('/api/v1')
+

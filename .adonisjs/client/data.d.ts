@@ -5,14 +5,30 @@
 
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
-import type UserTransformer from '#transformers/user_transformer'
+import type EstablishmentTransformer from '#transformers/establishment_transformer'
+import type InvoiceTransformer from '#transformers/invoice_transformer'
+import type PointBalanceTransformer from '#transformers/point_balance_transformer'
+import type PointTransactionTransformer from '#transformers/point_transaction_transformer'
 import type UserCustomerTransformer from '#transformers/user_customer_transformer'
 import type UserEstablishmentTransformer from '#transformers/user_establishment_transformer'
+import type UserTransformer from '#transformers/user_transformer'
 
 export namespace Data {
-  export type User = InferData<UserTransformer>
-  export namespace User {
-    export type Variants = InferVariants<UserTransformer>
+  export type Establishment = InferData<EstablishmentTransformer>
+  export namespace Establishment {
+    export type Variants = InferVariants<EstablishmentTransformer>
+  }
+  export type Invoice = InferData<InvoiceTransformer>
+  export namespace Invoice {
+    export type Variants = InferVariants<InvoiceTransformer>
+  }
+  export type PointBalance = InferData<PointBalanceTransformer>
+  export namespace PointBalance {
+    export type Variants = InferVariants<PointBalanceTransformer>
+  }
+  export type PointTransaction = InferData<PointTransactionTransformer>
+  export namespace PointTransaction {
+    export type Variants = InferVariants<PointTransactionTransformer>
   }
   export type UserCustomer = InferData<UserCustomerTransformer>
   export namespace UserCustomer {
@@ -21,5 +37,9 @@ export namespace Data {
   export type UserEstablishment = InferData<UserEstablishmentTransformer>
   export namespace UserEstablishment {
     export type Variants = InferVariants<UserEstablishmentTransformer>
+  }
+  export type User = InferData<UserTransformer>
+  export namespace User {
+    export type Variants = InferVariants<UserTransformer>
   }
 }
