@@ -8,6 +8,8 @@ import PointTransaction from '#models/point_transaction'
 import type UserCustomer from '#models/user_customer'
 import { Exception } from '@adonisjs/core/exceptions'
 
+import PointRule from '#models/point_rule'
+
 export interface InvoiceItemInput {
   rawDescription: string
   quantity: number
@@ -34,7 +36,7 @@ export class DuplicateInvoiceException extends Exception {
 
 export default class PointsEngineService {
   /**
-   * Computa a pontuação baseado no valor total e no fator de conversão.
+   * Computa a pontuação baseado no valor total e no fator de conversão legado/fallback.
    * Regra determinística arredondada para baixo (pontos inteiros).
    */
   computePoints(totalAmount: number, conversionFactor: number): number {
@@ -42,6 +44,44 @@ export default class PointsEngineService {
       return 0
     }
     return Math.floor(totalAmount * conversionFactor)
+  }
+
+  /**
+   * Computa a pontuação baseando-se em uma regra configurável (PointRule).
+   * Respeita valor mínimo de compra, relação X reais = Y pontos, e teto máximo de bonificação.
+   */
+  computePointsFromRule(
+    totalAmount: number,
+    rule: {
+      baseAmount: number
+      pointsPerBase: number
+      minPurchaseAmount?: number
+      maxPointsPerPurchase?: number | null
+    }
+  ): number {
+    if (totalAmount <= 0) {
+      return 0
+    }
+
+    const minAmount = Number(rule.minPurchaseAmount) || 0
+    if (totalAmount < minAmount) {
+      return 0
+    }
+
+    const baseAmount = Number(rule.baseAmount) || 1.0
+    const pointsPerBase = Number(rule.pointsPerBase) || 1
+
+    if (baseAmount <= 0 || pointsPerBase <= 0) {
+      return 0
+    }
+
+    let points = Math.floor(totalAmount / baseAmount) * pointsPerBase
+
+    if (rule.maxPointsPerPurchase && rule.maxPointsPerPurchase > 0) {
+      points = Math.min(points, rule.maxPointsPerPurchase)
+    }
+
+    return points
   }
 
   /**
@@ -168,9 +208,26 @@ export default class PointsEngineService {
       }
     }
 
-    // Cômputo dos pontos de acordo com o fator de conversão
-    const factor = Number(establishment.conversionFactor) || 1.0
-    const pointsAwarded = this.computePoints(data.totalAmount, factor)
+    // Cômputo dos pontos: busca a regra ativa do estabelecimento ou usa fallback
+    const activeRule = await PointRule.query()
+      .where('establishmentId', establishment.id)
+      .where('status', 'ACTIVE')
+      .orderBy('version', 'desc')
+      .first()
+
+    let pointsAwarded = 0
+    let appliedFactor = Number(establishment.conversionFactor) || 1.0
+    let ruleId: number | null = null
+    let ruleVersion: number | null = null
+
+    if (activeRule) {
+      pointsAwarded = this.computePointsFromRule(data.totalAmount, activeRule)
+      appliedFactor = activeRule.pointsPerBase / Number(activeRule.baseAmount)
+      ruleId = activeRule.id
+      ruleVersion = activeRule.version
+    } else {
+      pointsAwarded = this.computePoints(data.totalAmount, appliedFactor)
+    }
 
     // Transação atômica
     const trx = await db.transaction()
@@ -208,22 +265,28 @@ export default class PointsEngineService {
         )
       }
 
-      // 3. Registra no Ledger Imutável (PointTransaction)
+      // 3. Registra no Ledger Imutável (PointTransaction) com a versão da regra
       await PointTransaction.create(
         {
           customerId: customer.id,
           establishmentId: establishment.id,
           invoiceId: invoice.id,
+          ruleId,
+          ruleVersion,
           type: 'CREDIT',
           points: pointsAwarded,
           purchaseAmount: data.totalAmount,
-          appliedConversionFactor: factor,
+          appliedConversionFactor: appliedFactor,
           description: `Pontos por compra em ${establishment.tradeName}`,
           metadata: {
             accessKey: cleanKey,
             totalAmount: data.totalAmount,
-            conversionFactor: factor,
+            conversionFactor: appliedFactor,
             pointsAwarded,
+            ruleId,
+            ruleVersion,
+            ruleName: activeRule?.name,
+            ruleSummary: activeRule?.humanReadableSummary,
           },
         },
         { client: trx }

@@ -120,6 +120,30 @@ const routes = {
     tokens: [{"old":"/api/v1/establishments/:id","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['establishments.establishments.update']['types'],
   },
+  'establishment.establishment_rules.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishment/loyalty-rule',
+    tokens: [{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"api","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"v1","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"establishment","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"loyalty-rule","end":""}],
+    types: placeholder as Registry['establishment.establishment_rules.show']['types'],
+  },
+  'establishment.establishment_rules.simulate': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishment/loyalty-rule/simulate',
+    tokens: [{"old":"/api/v1/establishment/loyalty-rule/simulate","type":0,"val":"api","end":""},{"old":"/api/v1/establishment/loyalty-rule/simulate","type":0,"val":"v1","end":""},{"old":"/api/v1/establishment/loyalty-rule/simulate","type":0,"val":"establishment","end":""},{"old":"/api/v1/establishment/loyalty-rule/simulate","type":0,"val":"loyalty-rule","end":""},{"old":"/api/v1/establishment/loyalty-rule/simulate","type":0,"val":"simulate","end":""}],
+    types: placeholder as Registry['establishment.establishment_rules.simulate']['types'],
+  },
+  'establishment.establishment_rules.history': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishment/loyalty-rule/history',
+    tokens: [{"old":"/api/v1/establishment/loyalty-rule/history","type":0,"val":"api","end":""},{"old":"/api/v1/establishment/loyalty-rule/history","type":0,"val":"v1","end":""},{"old":"/api/v1/establishment/loyalty-rule/history","type":0,"val":"establishment","end":""},{"old":"/api/v1/establishment/loyalty-rule/history","type":0,"val":"loyalty-rule","end":""},{"old":"/api/v1/establishment/loyalty-rule/history","type":0,"val":"history","end":""}],
+    types: placeholder as Registry['establishment.establishment_rules.history']['types'],
+  },
+  'establishment.establishment_rules.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/establishment/loyalty-rule',
+    tokens: [{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"api","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"v1","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"establishment","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"loyalty-rule","end":""}],
+    types: placeholder as Registry['establishment.establishment_rules.update']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

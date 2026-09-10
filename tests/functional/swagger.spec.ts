@@ -16,6 +16,9 @@ test.group('Functional | Swagger Documentation', () => {
     assert.include(text, '/api/v1/customer/balances')
     assert.include(text, '/api/v1/customer/establishments/{establishmentId}/statement')
     assert.include(text, '/api/v1/establishments')
+    assert.include(text, '/api/v1/establishment/loyalty-rule')
+    assert.include(text, '/api/v1/establishment/loyalty-rule/simulate')
+    assert.include(text, '/api/v1/establishment/loyalty-rule/history')
 
     // Interface Swagger UI
     const uiResponse = await client.get('/docs')

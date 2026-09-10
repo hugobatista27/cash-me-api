@@ -235,4 +235,52 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'establishment.establishment_rules.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishment/loyalty-rule'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['show']>>>
+    }
+  }
+  'establishment.establishment_rules.simulate': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishment/loyalty-rule/simulate'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/loyalty_rule_validator').simulateRuleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['simulate']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['simulate']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishment.establishment_rules.history': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishment/loyalty-rule/history'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['history']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['history']>>>
+    }
+  }
+  'establishment.establishment_rules.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/establishment/loyalty-rule'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/loyalty_rule_validator').updateLoyaltyRuleValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/loyalty_rule_validator').updateLoyaltyRuleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }

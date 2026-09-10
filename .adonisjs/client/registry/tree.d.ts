@@ -51,4 +51,12 @@ export interface ApiDefinition {
       update: typeof routes['establishments.establishments.update']
     }
   }
+  establishment: {
+    establishmentRules: {
+      show: typeof routes['establishment.establishment_rules.show']
+      simulate: typeof routes['establishment.establishment_rules.simulate']
+      history: typeof routes['establishment.establishment_rules.history']
+      update: typeof routes['establishment.establishment_rules.update']
+    }
+  }
 }

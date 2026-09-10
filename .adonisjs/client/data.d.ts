@@ -8,6 +8,7 @@ import type { InferData, InferVariants } from '@adonisjs/core/types/transformers
 import type EstablishmentTransformer from '#transformers/establishment_transformer'
 import type InvoiceTransformer from '#transformers/invoice_transformer'
 import type PointBalanceTransformer from '#transformers/point_balance_transformer'
+import type PointRuleTransformer from '#transformers/point_rule_transformer'
 import type PointTransactionTransformer from '#transformers/point_transaction_transformer'
 import type UserCustomerTransformer from '#transformers/user_customer_transformer'
 import type UserEstablishmentTransformer from '#transformers/user_establishment_transformer'
@@ -25,6 +26,10 @@ export namespace Data {
   export type PointBalance = InferData<PointBalanceTransformer>
   export namespace PointBalance {
     export type Variants = InferVariants<PointBalanceTransformer>
+  }
+  export type PointRule = InferData<PointRuleTransformer>
+  export namespace PointRule {
+    export type Variants = InferVariants<PointRuleTransformer>
   }
   export type PointTransaction = InferData<PointTransactionTransformer>
   export namespace PointTransaction {

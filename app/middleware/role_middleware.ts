@@ -28,11 +28,20 @@ export type AllowedRole = 'SUPER_ADMIN' | 'LOJISTA_ADMIN' | 'LOJISTA_OPERADOR' |
  * Em caso de falha, lança uma exceção `E_AUTHORIZATION_FAILURE` (403).
  */
 export default class RoleMiddleware {
-  async handle(ctx: HttpContext, next: NextFn, options: { roles: AllowedRole[] }) {
-    const user = ctx.auth.user!
+  async handle(
+    ctx: HttpContext,
+    next: NextFn,
+    options: AllowedRole[] | { roles: AllowedRole[] } = []
+  ) {
+    const user = ctx.auth.user
+    if (!user) {
+      return ctx.response.unauthorized({ message: 'Autenticação necessária.' })
+    }
+
+    const roles: AllowedRole[] = Array.isArray(options) ? options : (options?.roles ?? [])
 
     // Carrega o perfil de estabelecimento apenas se necessário para lojistas
-    const needsEstablishmentProfile = options.roles.some(
+    const needsEstablishmentProfile = roles.some(
       (r) => r === 'LOJISTA_ADMIN' || r === 'LOJISTA_OPERADOR'
     )
 
@@ -40,7 +49,7 @@ export default class RoleMiddleware {
       await user.load((loader) => loader.load('establishmentProfile'))
     }
 
-    const isAuthorized = options.roles.some((allowedRole) => {
+    const isAuthorized = roles.some((allowedRole) => {
       switch (allowedRole) {
         case 'SUPER_ADMIN':
           return user.userType === 'SUPER_ADMIN'

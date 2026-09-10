@@ -23,6 +23,10 @@ export type ScannedRoutes = {
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.store': { paramsTuple?: []; params?: {} }
     'establishments.establishments.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_rules.update': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -34,6 +38,9 @@ export type ScannedRoutes = {
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -45,6 +52,9 @@ export type ScannedRoutes = {
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -59,6 +69,7 @@ export type ScannedRoutes = {
     'profile.user_customers.update': { paramsTuple?: []; params?: {} }
     'profile.user_establishments.update': { paramsTuple?: []; params?: {} }
     'establishments.establishments.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishment.establishment_rules.update': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

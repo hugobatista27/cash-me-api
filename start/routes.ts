@@ -31,6 +31,7 @@ router.get('/docs', async () => {
 const CustomerInvoicesController = () => import('#controllers/customer_invoices_controller')
 const CustomerPointsController = () => import('#controllers/customer_points_controller')
 const EstablishmentsController = () => import('#controllers/establishments_controller')
+const EstablishmentRulesController = () => import('#controllers/establishment_rules_controller')
 
 router
   .group(() => {
@@ -80,6 +81,20 @@ router
       })
       .prefix('establishments')
       .as('establishments')
+
+    // Rotas de Regras de Fidelidade do Lojista (Task #6)
+    router
+      .group(() => {
+        router.get('loyalty-rule', [EstablishmentRulesController, 'show'])
+        router.get('loyalty-rule/simulate', [EstablishmentRulesController, 'simulate'])
+        router.get('loyalty-rule/history', [EstablishmentRulesController, 'history'])
+        router
+          .put('loyalty-rule', [EstablishmentRulesController, 'update'])
+          .use(middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN']))
+      })
+      .prefix('establishment')
+      .as('establishment')
+      .use([middleware.auth(), middleware.role(['LOJISTA_ADMIN', 'LOJISTA_OPERADOR', 'SUPER_ADMIN'])])
   })
   .prefix('/api/v1')
 

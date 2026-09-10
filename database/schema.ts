@@ -105,6 +105,25 @@ export class InvoiceSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class LoyaltyProgramSchema extends BaseModel {
+  static $columns = ['createdAt', 'establishmentId', 'id', 'name', 'pointsCurrency', 'status', 'updatedAt'] as const
+  $columns = LoyaltyProgramSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare pointsCurrency: string
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class PointBalanceSchema extends BaseModel {
   static $columns = ['createdAt', 'currentBalance', 'customerId', 'establishmentId', 'id', 'totalAccumulated', 'updatedAt'] as const
   $columns = PointBalanceSchema.$columns
@@ -124,8 +143,39 @@ export class PointBalanceSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class PointRuleSchema extends BaseModel {
+  static $columns = ['baseAmount', 'createdAt', 'createdBy', 'establishmentId', 'id', 'loyaltyProgramId', 'maxPointsPerPurchase', 'minPurchaseAmount', 'name', 'pointsPerBase', 'status', 'updatedAt', 'version'] as const
+  $columns = PointRuleSchema.$columns
+  @column()
+  declare baseAmount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare createdBy: number | null
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare loyaltyProgramId: number
+  @column()
+  declare maxPointsPerPurchase: number | null
+  @column()
+  declare minPurchaseAmount: number
+  @column()
+  declare name: string
+  @column()
+  declare pointsPerBase: number
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare version: number
+}
+
 export class PointTransactionSchema extends BaseModel {
-  static $columns = ['appliedConversionFactor', 'createdAt', 'customerId', 'description', 'establishmentId', 'id', 'invoiceId', 'metadata', 'points', 'purchaseAmount', 'type'] as const
+  static $columns = ['appliedConversionFactor', 'createdAt', 'customerId', 'description', 'establishmentId', 'id', 'invoiceId', 'metadata', 'points', 'purchaseAmount', 'ruleId', 'ruleVersion', 'type'] as const
   $columns = PointTransactionSchema.$columns
   @column()
   declare appliedConversionFactor: number | null
@@ -147,6 +197,10 @@ export class PointTransactionSchema extends BaseModel {
   declare points: number
   @column()
   declare purchaseAmount: number | null
+  @column()
+  declare ruleId: number | null
+  @column()
+  declare ruleVersion: number | null
   @column()
   declare type: string
 }
