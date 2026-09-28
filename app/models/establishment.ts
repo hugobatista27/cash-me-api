@@ -7,8 +7,12 @@ import PointBalance from '#models/point_balance'
 import PointTransaction from '#models/point_transaction'
 import LoyaltyProgram from '#models/loyalty_program'
 import PointRule from '#models/point_rule'
+import EstablishmentAddress from '#models/establishment_address'
 
 export default class Establishment extends EstablishmentSchema {
+  @hasOne(() => EstablishmentAddress)
+  declare address: HasOne<typeof EstablishmentAddress>
+
   @hasMany(() => UserEstablishment)
   declare users: HasMany<typeof UserEstablishment>
 
@@ -27,3 +31,4 @@ export default class Establishment extends EstablishmentSchema {
   @hasMany(() => PointRule)
   declare pointRules: HasMany<typeof PointRule>
 }
+
