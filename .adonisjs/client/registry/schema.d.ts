@@ -35,12 +35,24 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/v1/auth/establishment/signup'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>|InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>|InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.user_establishments.register': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/establishment/register'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['register']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['register']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'auth.access_tokens.store': {
@@ -125,6 +137,198 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
+    }
+  }
+  'customer.customer_invoices.process': {
+    methods: ["POST"]
+    pattern: '/api/v1/customer/invoices/process'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/invoice_validator').processInvoiceValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/invoice_validator').processInvoiceValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_invoices_controller').default['process']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_invoices_controller').default['process']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'customer.customer_invoices.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/customer/invoices'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_invoices_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_invoices_controller').default['index']>>>
+    }
+  }
+  'customer.customer_invoices.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/customer/invoices/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_invoices_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_invoices_controller').default['show']>>>
+    }
+  }
+  'customer.customer_points.balances': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/customer/balances'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_points_controller').default['balances']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_points_controller').default['balances']>>>
+    }
+  }
+  'customer.customer_points.statement': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/customer/establishments/:establishmentId/statement'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { establishmentId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_points_controller').default['statement']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_points_controller').default['statement']>>>
+    }
+  }
+  'establishments.establishments.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishments'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['index']>>>
+    }
+  }
+  'establishments.establishments.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishments/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['show']>>>
+    }
+  }
+  'establishments.establishments.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/establishments'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').createEstablishmentValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').createEstablishmentValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.establishments.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/establishments/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').updateEstablishmentValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').updateEstablishmentValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.establishments.show_address': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishments/:id/address'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['showAddress']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['showAddress']>>>
+    }
+  }
+  'establishments.establishments.update_address': {
+    methods: ["PUT"]
+    pattern: '/api/v1/establishments/:id/address'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').updateAddressValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').updateAddressValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['updateAddress']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['updateAddress']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.approve': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/establishments/:id/approve'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').approveEstablishmentValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').approveEstablishmentValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['approve']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['approve']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishment.establishment_rules.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishment/loyalty-rule'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['show']>>>
+    }
+  }
+  'establishment.establishment_rules.simulate': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishment/loyalty-rule/simulate'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: ExtractQueryForGet<InferInput<(typeof import('#validators/loyalty_rule_validator').simulateRuleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['simulate']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['simulate']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishment.establishment_rules.history': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishment/loyalty-rule/history'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['history']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['history']>>>
+    }
+  }
+  'establishment.establishment_rules.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/establishment/loyalty-rule'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/loyalty_rule_validator').updateLoyaltyRuleValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/loyalty_rule_validator').updateLoyaltyRuleValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
 }

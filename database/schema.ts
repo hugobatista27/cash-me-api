@@ -32,6 +32,224 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class EstablishmentAddressSchema extends BaseModel {
+  static $columns = ['city', 'complement', 'createdAt', 'establishmentId', 'id', 'latitude', 'longitude', 'neighborhood', 'number', 'postalCode', 'reference', 'state', 'street', 'updatedAt'] as const
+  $columns = EstablishmentAddressSchema.$columns
+  @column()
+  declare city: string
+  @column()
+  declare complement: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare latitude: number | null
+  @column()
+  declare longitude: number | null
+  @column()
+  declare neighborhood: string
+  @column()
+  declare number: string
+  @column()
+  declare postalCode: string
+  @column()
+  declare reference: string | null
+  @column()
+  declare state: string
+  @column()
+  declare street: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class EstablishmentSchema extends BaseModel {
+  static $columns = ['cnpj', 'conversionFactor', 'createdAt', 'email', 'id', 'instagram', 'legalName', 'phone', 'socialLinks', 'status', 'tradeName', 'updatedAt', 'website', 'whatsapp'] as const
+  $columns = EstablishmentSchema.$columns
+  @column()
+  declare cnpj: string
+  @column()
+  declare conversionFactor: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare email: string | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare instagram: string | null
+  @column()
+  declare legalName: string
+  @column()
+  declare phone: string | null
+  @column()
+  declare socialLinks: any | null
+  @column()
+  declare status: string
+  @column()
+  declare tradeName: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare website: string | null
+  @column()
+  declare whatsapp: string | null
+}
+
+export class InvoiceItemSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'invoiceId', 'quantity', 'rawDescription', 'totalPrice', 'unitPrice'] as const
+  $columns = InvoiceItemSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare invoiceId: number
+  @column()
+  declare quantity: number
+  @column()
+  declare rawDescription: string
+  @column()
+  declare totalPrice: number
+  @column()
+  declare unitPrice: number
+}
+
+export class InvoiceSchema extends BaseModel {
+  static $columns = ['accessKey', 'createdAt', 'customerId', 'establishmentId', 'id', 'issuedAt', 'issuerCnpj', 'issuerState', 'pointsAwarded', 'qrCodeUrl', 'rejectionReason', 'status', 'totalAmount', 'updatedAt'] as const
+  $columns = InvoiceSchema.$columns
+  @column()
+  declare accessKey: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column()
+  declare establishmentId: number | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column.dateTime()
+  declare issuedAt: DateTime
+  @column()
+  declare issuerCnpj: string
+  @column()
+  declare issuerState: string
+  @column()
+  declare pointsAwarded: number
+  @column()
+  declare qrCodeUrl: string
+  @column()
+  declare rejectionReason: string | null
+  @column()
+  declare status: string
+  @column()
+  declare totalAmount: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class LoyaltyProgramSchema extends BaseModel {
+  static $columns = ['createdAt', 'establishmentId', 'id', 'name', 'pointsCurrency', 'status', 'updatedAt'] as const
+  $columns = LoyaltyProgramSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column()
+  declare pointsCurrency: string
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PointBalanceSchema extends BaseModel {
+  static $columns = ['createdAt', 'currentBalance', 'customerId', 'establishmentId', 'id', 'totalAccumulated', 'updatedAt'] as const
+  $columns = PointBalanceSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare currentBalance: number
+  @column()
+  declare customerId: number
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare totalAccumulated: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class PointRuleSchema extends BaseModel {
+  static $columns = ['baseAmount', 'createdAt', 'createdBy', 'establishmentId', 'id', 'loyaltyProgramId', 'maxPointsPerPurchase', 'minPurchaseAmount', 'name', 'pointsPerBase', 'status', 'updatedAt', 'version'] as const
+  $columns = PointRuleSchema.$columns
+  @column()
+  declare baseAmount: number
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare createdBy: number | null
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare loyaltyProgramId: number
+  @column()
+  declare maxPointsPerPurchase: number | null
+  @column()
+  declare minPurchaseAmount: number
+  @column()
+  declare name: string
+  @column()
+  declare pointsPerBase: number
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare version: number
+}
+
+export class PointTransactionSchema extends BaseModel {
+  static $columns = ['appliedConversionFactor', 'createdAt', 'customerId', 'description', 'establishmentId', 'id', 'invoiceId', 'metadata', 'points', 'purchaseAmount', 'ruleId', 'ruleVersion', 'type'] as const
+  $columns = PointTransactionSchema.$columns
+  @column()
+  declare appliedConversionFactor: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column()
+  declare description: string
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare invoiceId: number | null
+  @column()
+  declare metadata: any | null
+  @column()
+  declare points: number
+  @column()
+  declare purchaseAmount: number | null
+  @column()
+  declare ruleId: number | null
+  @column()
+  declare ruleVersion: number | null
+  @column()
+  declare type: string
+}
+
 export class UserCustomerSchema extends BaseModel {
   static $columns = ['authProvider', 'cpf', 'createdAt', 'deviceToken', 'fullName', 'id', 'phone', 'socialId', 'termsAcceptedAt', 'updatedAt', 'userId'] as const
   $columns = UserCustomerSchema.$columns

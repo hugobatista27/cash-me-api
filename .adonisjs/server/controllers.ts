@@ -5,6 +5,10 @@
 
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
+  CustomerInvoices: () => import('#controllers/customer_invoices_controller'),
+  CustomerPoints: () => import('#controllers/customer_points_controller'),
+  EstablishmentRules: () => import('#controllers/establishment_rules_controller'),
+  Establishments: () => import('#controllers/establishments_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),
   UserCustomers: () => import('#controllers/user_customers_controller'),

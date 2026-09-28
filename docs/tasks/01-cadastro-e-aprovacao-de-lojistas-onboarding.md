@@ -11,9 +11,9 @@ A interface web permite o cadastro inicial de Lojistas (com status "Pendente") e
 
 ## Acceptance criteria
 
-- [ ] API endpoint permite a criação de um lojista com status inicial pendente.
-- [ ] API endpoint restrito permite a aprovação/ativação do lojista.
-- [ ] Migration cria a tabela do schema base do tenant (`estabelecimentos`) contendo no mínimo `cnpj_emitente` e `status`.
+- [ ] API endpoint permite a criação atômica de um lojista com status inicial `PENDING`, incluindo dados cadastrais, endereço e usuário gestor (`LOJISTA_ADMIN`).
+- [ ] API endpoint restrito permite a aprovação/ativação do lojista (`status = 'ACTIVE'`).
+- [ ] Migrations e Models contemplam as tabelas `establishments` e `establishment_addresses` conforme documentado em `docs/architecture/ESTRUTURA-DADOS-COMERCIO.md`.
 
 ## Blocked by
 
