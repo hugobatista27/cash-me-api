@@ -24,6 +24,12 @@ const routes = {
     tokens: [{"old":"/api/v1/auth/establishment/signup","type":0,"val":"api","end":""},{"old":"/api/v1/auth/establishment/signup","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/establishment/signup","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/establishment/signup","type":0,"val":"establishment","end":""},{"old":"/api/v1/auth/establishment/signup","type":0,"val":"signup","end":""}],
     types: placeholder as Registry['auth.user_establishments.store']['types'],
   },
+  'auth.user_establishments.register': {
+    methods: ["POST"],
+    pattern: '/api/v1/auth/establishment/register',
+    tokens: [{"old":"/api/v1/auth/establishment/register","type":0,"val":"api","end":""},{"old":"/api/v1/auth/establishment/register","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/establishment/register","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/establishment/register","type":0,"val":"establishment","end":""},{"old":"/api/v1/auth/establishment/register","type":0,"val":"register","end":""}],
+    types: placeholder as Registry['auth.user_establishments.register']['types'],
+  },
   'auth.access_tokens.store': {
     methods: ["POST"],
     pattern: '/api/v1/auth/login',
@@ -119,6 +125,24 @@ const routes = {
     pattern: '/api/v1/establishments/:id',
     tokens: [{"old":"/api/v1/establishments/:id","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/:id","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['establishments.establishments.update']['types'],
+  },
+  'establishments.establishments.show_address': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishments/:id/address',
+    tokens: [{"old":"/api/v1/establishments/:id/address","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/:id/address","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/:id/address","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/:id/address","type":1,"val":"id","end":""},{"old":"/api/v1/establishments/:id/address","type":0,"val":"address","end":""}],
+    types: placeholder as Registry['establishments.establishments.show_address']['types'],
+  },
+  'establishments.establishments.update_address': {
+    methods: ["PUT"],
+    pattern: '/api/v1/establishments/:id/address',
+    tokens: [{"old":"/api/v1/establishments/:id/address","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/:id/address","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/:id/address","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/:id/address","type":1,"val":"id","end":""},{"old":"/api/v1/establishments/:id/address","type":0,"val":"address","end":""}],
+    types: placeholder as Registry['establishments.establishments.update_address']['types'],
+  },
+  'establishments.approve': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/establishments/:id/approve',
+    tokens: [{"old":"/api/v1/establishments/:id/approve","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/:id/approve","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/:id/approve","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/:id/approve","type":1,"val":"id","end":""},{"old":"/api/v1/establishments/:id/approve","type":0,"val":"approve","end":""}],
+    types: placeholder as Registry['establishments.approve']['types'],
   },
   'establishment.establishment_rules.show': {
     methods: ["GET","HEAD"],

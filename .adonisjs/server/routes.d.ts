@@ -7,6 +7,7 @@ export type ScannedRoutes = {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
     'auth.user_customers.store': { paramsTuple?: []; params?: {} }
     'auth.user_establishments.store': { paramsTuple?: []; params?: {} }
+    'auth.user_establishments.register': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'profile.profile.show': { paramsTuple?: []; params?: {} }
     'profile.user_customers.show': { paramsTuple?: []; params?: {} }
@@ -23,6 +24,9 @@ export type ScannedRoutes = {
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.store': { paramsTuple?: []; params?: {} }
     'establishments.establishments.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.establishments.show_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.establishments.update_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.approve': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
@@ -38,6 +42,7 @@ export type ScannedRoutes = {
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.establishments.show_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
@@ -52,6 +57,7 @@ export type ScannedRoutes = {
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.establishments.show_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
@@ -60,6 +66,7 @@ export type ScannedRoutes = {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
     'auth.user_customers.store': { paramsTuple?: []; params?: {} }
     'auth.user_establishments.store': { paramsTuple?: []; params?: {} }
+    'auth.user_establishments.register': { paramsTuple?: []; params?: {} }
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'customer.customer_invoices.process': { paramsTuple?: []; params?: {} }
@@ -69,7 +76,11 @@ export type ScannedRoutes = {
     'profile.user_customers.update': { paramsTuple?: []; params?: {} }
     'profile.user_establishments.update': { paramsTuple?: []; params?: {} }
     'establishments.establishments.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.establishments.update_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishment.establishment_rules.update': { paramsTuple?: []; params?: {} }
+  }
+  PATCH: {
+    'establishments.approve': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

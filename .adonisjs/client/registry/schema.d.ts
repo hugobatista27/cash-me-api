@@ -35,12 +35,24 @@ export interface Registry {
     methods: ["POST"]
     pattern: '/api/v1/auth/establishment/signup'
     types: {
-      body: ExtractBody<InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>|InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
       paramsTuple: []
       params: {}
-      query: ExtractQuery<InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>|InferInput<(typeof import('#validators/user_establishment').signupEstablishmentValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['store']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'auth.user_establishments.register': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/establishment/register'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').onboardingEstablishmentValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['register']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/user_establishments_controller').default['register']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'auth.access_tokens.store': {
@@ -233,6 +245,42 @@ export interface Registry {
       query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').updateEstablishmentValidator)>>
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['update']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.establishments.show_address': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishments/:id/address'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['showAddress']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['showAddress']>>>
+    }
+  }
+  'establishments.establishments.update_address': {
+    methods: ["PUT"]
+    pattern: '/api/v1/establishments/:id/address'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').updateAddressValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').updateAddressValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['updateAddress']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['updateAddress']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.approve': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/establishments/:id/approve'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/establishment_validator').approveEstablishmentValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/establishment_validator').approveEstablishmentValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['approve']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishments_controller').default['approve']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
   'establishment.establishment_rules.show': {

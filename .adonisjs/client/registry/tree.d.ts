@@ -11,6 +11,7 @@ export interface ApiDefinition {
     }
     userEstablishments: {
       store: typeof routes['auth.user_establishments.store']
+      register: typeof routes['auth.user_establishments.register']
     }
     accessTokens: {
       store: typeof routes['auth.access_tokens.store']
@@ -49,7 +50,10 @@ export interface ApiDefinition {
       show: typeof routes['establishments.establishments.show']
       store: typeof routes['establishments.establishments.store']
       update: typeof routes['establishments.establishments.update']
+      showAddress: typeof routes['establishments.establishments.show_address']
+      updateAddress: typeof routes['establishments.establishments.update_address']
     }
+    approve: typeof routes['establishments.approve']
   }
   establishment: {
     establishmentRules: {
