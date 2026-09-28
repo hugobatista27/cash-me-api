@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cash-Me | Vitrine & Estabelecimentos Parceiros</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-main: #0a0d14;
+        --bg-card: rgba(18, 24, 38, 0.85);
+        --bg-card-subtle: rgba(28, 36, 56, 0.6);
+        --border-color: rgba(255, 255, 255, 0.08);
+        --border-focus: #3b82f6;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --brand-primary: #3b82f6;
+        --brand-primary-hover: #2563eb;
+        --brand-emerald: #10b981;
+        --brand-purple: #8b5cf6;
+        --brand-amber: #f59e0b;
+        --brand-rose: #f43f5e;
+        --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--bg-main);
+        color: var(--text-primary);
+        line-height: 1.5;
+        min-height: 100vh;
+        background-image: 
+          radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+          radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+          radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+        background-attachment: fixed;
+        padding: 2rem 1.25rem 4rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Navbar / Top Bar */
+      .top-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(16px);
+        border-radius: 1rem;
+        padding: 0.875rem 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 800;
+        font-size: 1.15rem;
+        color: var(--text-primary);
+        text-decoration: none;
+      }
+
+      .brand-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .nav-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+
+      .nav-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+      }
+
+      .nav-btn.primary {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border: none;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+
+      .nav-btn.primary:hover {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      }
+
+      /* Header & KPIs */
+      .page-header {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .header-title-box h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.25rem;
+      }
+
+      .header-title-box p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+      }
+
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+
+      .kpi-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(16px);
+        border-radius: 1rem;
+        padding: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .kpi-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .kpi-total .kpi-icon { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+      .kpi-active .kpi-icon { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+      .kpi-pending .kpi-icon { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+      .kpi-inactive .kpi-icon { background: rgba(244, 63, 94, 0.15); color: #fb7185; }
+
+      .kpi-info .kpi-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .kpi-info .kpi-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      /* Control Toolbar */
+      .toolbar {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(16px);
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.85rem;
+        flex: 1;
+        min-width: 260px;
+      }
+
+      .search-box input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        width: 100%;
+      }
+
+      .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .filter-select {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.85rem;
+        border-radius: 0.5rem;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .view-toggle {
+        display: flex;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 0.25rem;
+      }
+
+      .view-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 0.35rem 0.65rem;
+        border-radius: 0.35rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+
+      .view-btn.active {
+        background: rgba(59, 130, 246, 0.25);
+        color: #93c5fd;
+      }
+
+      /* Cards Grid (Vitrine) */
+      .establishments-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .est-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(20px);
+        border-radius: 1.25rem;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1.25rem;
+        transition: all 0.25s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .est-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+
+      .est-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(59, 130, 246, 0.35);
+        box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.6);
+      }
+
+      .est-card:hover::before {
+        opacity: 1;
+      }
+
+      .card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .est-identity {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+      }
+
+      .est-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 0.85rem;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #93c5fd;
+        flex-shrink: 0;
+      }
+
+      .est-names h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--text-primary);
+        line-height: 1.25;
+      }
+
+      .est-names .legal-name {
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+      }
+
+      .badge-status {
+        padding: 0.25rem 0.625rem;
+        border-radius: 9999px;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        white-space: nowrap;
+      }
+
+      .status-ACTIVE {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      .status-PENDING {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+
+      .status-INACTIVE {
+        background: rgba(244, 63, 94, 0.15);
+        color: #fb7185;
+        border: 1px solid rgba(244, 63, 94, 0.3);
+      }
+
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: currentColor;
+      }
+
+      /* Card Details */
+      .card-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        font-size: 0.8125rem;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid var(--border-color);
+        border-radius: 0.75rem;
+        padding: 0.875rem 1rem;
+      }
+
+      .detail-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+        color: var(--text-secondary);
+      }
+
+      .detail-row svg {
+        width: 15px;
+        height: 15px;
+        color: var(--text-muted);
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      .detail-row strong {
+        color: var(--text-primary);
+      }
+
+      .cnpj-tag {
+        font-family: var(--font-mono);
+        letter-spacing: 0.02em;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.15rem 0.4rem;
+        border-radius: 0.3rem;
+        font-size: 0.75rem;
+      }
+
+      /* Action Buttons */
+      .card-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .contact-pills {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .pill-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 0.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+
+      .pill-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        transform: translateY(-2px);
+      }
+
+      .pill-whatsapp:hover { background: rgba(37, 211, 102, 0.25); color: #25d366; }
+      .pill-instagram:hover { background: rgba(225, 48, 108, 0.25); color: #e1306c; }
+      .pill-website:hover { background: rgba(59, 130, 246, 0.25); color: #60a5fa; }
+
+      .btn-action-primary {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #93c5fd;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-action-primary:hover {
+        background: rgba(59, 130, 246, 0.3);
+        color: #fff;
+      }
+
+      /* Table View */
+      .table-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(20px);
+        border-radius: 1.25rem;
+        overflow: hidden;
+        display: none;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        text-align: left;
+      }
+
+      th {
+        background: rgba(0, 0, 0, 0.3);
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      td {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-secondary);
+      }
+
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 1.25rem;
+        display: none;
+      }
+
+      .empty-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 1.5rem;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--brand-primary);
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .empty-state h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .empty-state p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        max-width: 400px;
+        margin: 0 auto 1.5rem;
+      }
+
+      /* Modal Detalhes */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 1.25rem;
+      }
+
+      .modal-content {
+        background: #0f172a;
+        border: 1px solid var(--border-color);
+        border-radius: 1.25rem;
+        width: 100%;
+        max-width: 680px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 2rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        position: relative;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .btn-close {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 1.5rem;
+        line-height: 1;
+        transition: color 0.2s;
+      }
+
+      .btn-close:hover {
+        color: #fff;
+      }
+
+      .raw-json {
+        background: #05070a;
+        border: 1px solid var(--border-color);
+        border-radius: 0.625rem;
+        padding: 1rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: #cbd5e1;
+        overflow-x: auto;
+        max-height: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Navbar -->
+      <nav class="top-nav">
+        <a href="list.html" class="brand">
+          <div class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          Cash-Me Vitrine
+        </a>
+        <div class="nav-links">
+          <a href="index.html" class="nav-btn primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Novo Cadastro
+          </a>
+          <button type="button" class="nav-btn" id="btnRefresh">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Atualizar
+          </button>
+        </div>
+      </nav>
+
+      <!-- Page Header & KPIs -->
+      <header class="page-header">
+        <div class="header-title-box">
+          <h1>Estabelecimentos Credenciados</h1>
+          <p>Visão geral dos lojistas parceiros, endereços físicos e status no ecossistema Cash-Me.</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-total">
+            <div class="kpi-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <div class="kpi-info">
+              <div class="kpi-value" id="kpiTotal">0</div>
+              <div class="kpi-label">Total de Lojas</div>
+            </div>
+          </div>
+
+          <div class="kpi-card kpi-active">
+            <div class="kpi-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="kpi-info">
+              <div class="kpi-value" id="kpiActive">0</div>
+              <div class="kpi-label">Lojas Ativas</div>
+            </div>
+          </div>
+
+          <div class="kpi-card kpi-pending">
+            <div class="kpi-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="kpi-info">
+              <div class="kpi-value" id="kpiPending">0</div>
+              <div class="kpi-label">Pendentes (RN06)</div>
+            </div>
+          </div>
+
+          <div class="kpi-card kpi-inactive">
+            <div class="kpi-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              </svg>
+            </div>
+            <div class="kpi-info">
+              <div class="kpi-value" id="kpiInactive">0</div>
+              <div class="kpi-label">Inativos (RN05)</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Toolbar de Filtros & Busca -->
+      <div class="toolbar">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted)">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input type="text" id="searchInput" placeholder="Buscar por Nome Fantasia, CNPJ ou Cidade..." />
+        </div>
+
+        <div class="filter-group">
+          <select id="statusFilter" class="filter-select">
+            <option value="ALL">Todos os Status</option>
+            <option value="ACTIVE">Apenas Ativos</option>
+            <option value="PENDING">Apenas Pendentes</option>
+            <option value="INACTIVE">Apenas Inativos</option>
+          </select>
+
+          <select id="stateFilter" class="filter-select">
+            <option value="ALL">Todos os Estados</option>
+            <option value="SC">Santa Catarina (SC)</option>
+            <option value="PR">Paraná (PR)</option>
+          </select>
+
+          <div class="view-toggle">
+            <button type="button" class="view-btn active" id="btnViewGrid" title="Visualização em Cards">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              Cards
+            </button>
+            <button type="button" class="view-btn" id="btnViewTable" title="Visualização em Tabela">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              Tabela
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de Cards (Vitrine) -->
+      <div class="establishments-grid" id="establishmentsGrid"></div>
+
+      <!-- Tabela Alternativa -->
+      <div class="table-card" id="establishmentsTableCard">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome Fantasia / Razão Social</th>
+              <th>CNPJ</th>
+              <th>Localização</th>
+              <th>Fator Pontos</th>
+              <th>Status</th>
+              <th style="text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="establishmentsTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        </div>
+        <h3>Nenhum estabelecimento encontrado</h3>
+        <p>Não há lojas cadastradas ou os filtros aplicados não retornaram resultados.</p>
+        <a href="index.html" class="nav-btn primary">Cadastrar Novo Comércio</a>
+      </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="est-avatar" id="modalAvatar">M</div>
+            <div>
+              <h2 id="modalTradeName" style="font-size: 1.25rem; font-weight: 800;">Nome da Loja</h2>
+              <p id="modalLegalName" style="color: var(--text-muted); font-size: 0.8125rem;">Razão Social Ltda</p>
+            </div>
+          </div>
+          <button type="button" class="btn-close" id="btnCloseModal">&times;</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8125rem; color: var(--text-muted);">Status Operacional:</span>
+            <span id="modalStatusBadge" class="badge-status status-PENDING">PENDENTE</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8125rem; color: var(--text-muted);">CNPJ Emitente:</span>
+            <span id="modalCnpj" class="cnpj-tag">00.000.000/0000-00</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8125rem; color: var(--text-muted);">Regra de Pontuação:</span>
+            <span id="modalConversion" style="font-weight: 700; color: #60a5fa;">R$ 1 = 1 ponto</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <span style="font-size: 0.8125rem; color: var(--text-muted);">Endereço Físico:</span>
+            <span id="modalAddress" style="text-align: right; max-width: 380px; color: var(--text-primary); font-size: 0.85rem;">-</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
+            Canais de Contato & Redes:
+          </label>
+          <div id="modalContacts" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;"></div>
+        </div>
+
+        <div>
+          <label style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">
+            Payload JSON Completo:
+          </label>
+          <pre class="raw-json" id="modalRawJson"></pre>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = 'http://localhost:3333/api/v1/establishments'
+      let establishmentsData = []
+
+      // Elementos
+      const gridContainer = document.getElementById('establishmentsGrid')
+      const tableCard = document.getElementById('establishmentsTableCard')
+      const tableBody = document.getElementById('establishmentsTableBody')
+      const emptyState = document.getElementById('emptyState')
+      const searchInput = document.getElementById('searchInput')
+      const statusFilter = document.getElementById('statusFilter')
+      const stateFilter = document.getElementById('stateFilter')
+      const btnRefresh = document.getElementById('btnRefresh')
+      const btnViewGrid = document.getElementById('btnViewGrid')
+      const btnViewTable = document.getElementById('btnViewTable')
+
+      // KPIs
+      const kpiTotal = document.getElementById('kpiTotal')
+      const kpiActive = document.getElementById('kpiActive')
+      const kpiPending = document.getElementById('kpiPending')
+      const kpiInactive = document.getElementById('kpiInactive')
+
+      // Modal
+      const modalBackdrop = document.getElementById('modalBackdrop')
+      const btnCloseModal = document.getElementById('btnCloseModal')
+      const modalAvatar = document.getElementById('modalAvatar')
+      const modalTradeName = document.getElementById('modalTradeName')
+      const modalLegalName = document.getElementById('modalLegalName')
+      const modalStatusBadge = document.getElementById('modalStatusBadge')
+      const modalCnpj = document.getElementById('modalCnpj')
+      const modalConversion = document.getElementById('modalConversion')
+      const modalAddress = document.getElementById('modalAddress')
+      const modalContacts = document.getElementById('modalContacts')
+      const modalRawJson = document.getElementById('modalRawJson')
+
+      // Formatar CNPJ
+      function formatCnpj(cnpj) {
+        if (!cnpj) return '-'
+        const clean = cnpj.replace(/\D/g, '')
+        if (clean.length === 14) {
+          return clean.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+        }
+        return cnpj
+      }
+
+      // Formatar Telefone
+      function formatPhone(phone) {
+        if (!phone) return ''
+        const clean = phone.replace(/\D/g, '')
+        if (clean.length === 11) {
+          return clean.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3')
+        } else if (clean.length === 10) {
+          return clean.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3')
+        }
+        return phone
+      }
+
+      // Carregar Estabelecimentos
+      async function loadEstablishments() {
+        try {
+          btnRefresh.disabled = true
+          const res = await fetch(API_URL, {
+            headers: { 'Accept': 'application/json' }
+          })
+          const result = await res.json()
+          establishmentsData = result.data || []
+          updateKPIs()
+          render()
+        } catch (err) {
+          console.error('Erro ao carregar estabelecimentos:', err)
+          gridContainer.innerHTML = `
+            <div style="grid-column: 1 / -1; padding: 2rem; text-align: center; color: #fb7185; background: rgba(244, 63, 94, 0.1); border-radius: 1rem; border: 1px solid rgba(244, 63, 94, 0.3);">
+              Erro ao carregar dados da API (${API_URL}). Certifique-se de que o backend AdonisJS está em execução (npm run dev).
+            </div>
+          `
+        } finally {
+          btnRefresh.disabled = false
+        }
+      }
+
+      // Atualizar KPIs
+      function updateKPIs() {
+        kpiTotal.textContent = establishmentsData.length
+        kpiActive.textContent = establishmentsData.filter(e => e.status === 'ACTIVE').length
+        kpiPending.textContent = establishmentsData.filter(e => e.status === 'PENDING').length
+        kpiInactive.textContent = establishmentsData.filter(e => e.status === 'INACTIVE').length
+      }
+
+      // Filtrar
+      function getFilteredList() {
+        const query = searchInput.value.toLowerCase().trim()
+        const status = statusFilter.value
+        const state = stateFilter.value
+
+        return establishmentsData.filter(est => {
+          // Status
+          if (status !== 'ALL' && est.status !== status) return false
+
+          // Estado
+          if (state !== 'ALL') {
+            const addrState = est.address?.state || ''
+            if (addrState.toUpperCase() !== state) return false
+          }
+
+          // Query de busca
+          if (query) {
+            const trade = (est.tradeName || '').toLowerCase()
+            const legal = (est.legalName || '').toLowerCase()
+            const cnpj = (est.cnpj || '').toLowerCase()
+            const city = (est.address?.city || '').toLowerCase()
+            return trade.includes(query) || legal.includes(query) || cnpj.includes(query) || city.includes(query)
+          }
+
+          return true
+        })
+      }
+
+      // Renderizar Cards e Tabela
+      function render() {
+        const list = getFilteredList()
+
+        if (list.length === 0) {
+          gridContainer.style.display = 'none'
+          tableCard.style.display = 'none'
+          emptyState.style.display = 'block'
+          return
+        }
+
+        emptyState.style.display = 'none'
+
+        if (btnViewGrid.classList.contains('active')) {
+          gridContainer.style.display = 'grid'
+          tableCard.style.display = 'none'
+          renderGrid(list)
+        } else {
+          gridContainer.style.display = 'none'
+          tableCard.style.display = 'block'
+          renderTable(list)
+        }
+      }
+
+      function renderGrid(list) {
+        gridContainer.innerHTML = list.map(est => {
+          const initial = (est.tradeName || 'E').charAt(0).toUpperCase()
+          const cnpjFormatted = formatCnpj(est.cnpj)
+          const address = est.address
+          const fullAddress = address 
+            ? `${address.street}, ${address.number} - ${address.neighborhood}, ${address.city} (${address.state})`
+            : 'Endereço físico não informado'
+
+          // Links Sociais
+          let parsedSocial = {}
+          try {
+            if (typeof est.socialLinks === 'string') {
+              parsedSocial = JSON.parse(est.socialLinks)
+            } else if (typeof est.socialLinks === 'object' && est.socialLinks) {
+              parsedSocial = est.socialLinks
+            }
+          } catch(e) {}
+
+          const whatsappNumber = (est.whatsapp || '').replace(/\D/g, '')
+          const whatsappBtn = whatsappNumber
+            ? `<a href="https://wa.me/55${whatsappNumber}" target="_blank" class="pill-btn pill-whatsapp" title="WhatsApp: ${formatPhone(est.whatsapp)}">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+               </a>`
+            : ''
+
+          const instagramHandle = est.instagram ? est.instagram.replace('@', '') : ''
+          const instagramBtn = instagramHandle
+            ? `<a href="https://instagram.com/${instagramHandle}" target="_blank" class="pill-btn pill-instagram" title="Instagram: @${instagramHandle}">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+               </a>`
+            : ''
+
+          const websiteBtn = est.website
+            ? `<a href="${est.website}" target="_blank" class="pill-btn pill-website" title="Website: ${est.website}">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+               </a>`
+            : ''
+
+          const mapLink = address?.latitude && address?.longitude
+            ? `https://www.google.com/maps?q=${address.latitude},${address.longitude}`
+            : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`
+
+          return `
+            <div class="est-card">
+              <div>
+                <div class="card-top">
+                  <div class="est-identity">
+                    <div class="est-avatar">${initial}</div>
+                    <div class="est-names">
+                      <h3>${est.tradeName}</h3>
+                      <div class="legal-name">${est.legalName}</div>
+                    </div>
+                  </div>
+                  <span class="badge-status status-${est.status}">
+                    <span class="badge-dot"></span>
+                    ${est.status === 'PENDING' ? 'Pendente' : est.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
+                  </span>
+                </div>
+
+                <div class="card-details" style="margin-top: 1rem;">
+                  <div class="detail-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="12" y2="16"></line></svg>
+                    <div>CNPJ: <span class="cnpj-tag">${cnpjFormatted}</span></div>
+                  </div>
+
+                  <div class="detail-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <div>Pontos: <strong>R$ 1,00 = ${est.conversionFactor || 1} pt</strong></div>
+                  </div>
+
+                  <div class="detail-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <div>
+                      <a href="${mapLink}" target="_blank" style="color: #93c5fd; text-decoration: none;" title="Abrir no Google Maps">
+                        ${fullAddress}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <div class="contact-pills">
+                  ${whatsappBtn}
+                  ${instagramBtn}
+                  ${websiteBtn}
+                </div>
+                <button type="button" class="btn-action-primary" onclick="openDetailsModal(${est.id})">
+                  Ver Detalhes
+                </button>
+              </div>
+            </div>
+          `
+        }).join('')
+      }
+
+      function renderTable(list) {
+        tableBody.innerHTML = list.map(est => {
+          const address = est.address ? `${est.address.city} (${est.address.state})` : '-'
+          return `
+            <tr>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: #60a5fa;">#${est.id}</td>
+              <td>
+                <div style="font-weight: 700; color: var(--text-primary);">${est.tradeName}</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">${est.legalName}</div>
+              </td>
+              <td><span class="cnpj-tag">${formatCnpj(est.cnpj)}</span></td>
+              <td>${address}</td>
+              <td style="font-weight: 600;">R$ 1 = ${est.conversionFactor} pt</td>
+              <td>
+                <span class="badge-status status-${est.status}">
+                  <span class="badge-dot"></span>
+                  ${est.status}
+                </span>
+              </td>
+              <td style="text-align: right;">
+                <button type="button" class="btn-action-primary" onclick="openDetailsModal(${est.id})">
+                  Visualizar
+                </button>
+              </td>
+            </tr>
+          `
+        }).join('')
+      }
+
+      // Modal de Detalhes
+      window.openDetailsModal = function(id) {
+        const est = establishmentsData.find(e => e.id === id)
+        if (!est) return
+
+        modalAvatar.textContent = (est.tradeName || 'E').charAt(0).toUpperCase()
+        modalTradeName.textContent = est.tradeName
+        modalLegalName.textContent = est.legalName
+        modalCnpj.textContent = formatCnpj(est.cnpj)
+        modalConversion.textContent = `R$ 1,00 gasto = ${est.conversionFactor || 1.0} ponto(s)`
+
+        modalStatusBadge.className = `badge-status status-${est.status}`
+        modalStatusBadge.textContent = est.status === 'PENDING' ? 'PENDENTE' : est.status === 'ACTIVE' ? 'ATIVO' : 'INATIVO'
+
+        const addr = est.address
+        if (addr) {
+          modalAddress.innerHTML = `
+            ${addr.street}, nº ${addr.number} ${addr.complement ? '(' + addr.complement + ')' : ''}<br>
+            Bairro: ${addr.neighborhood} - ${addr.city} / ${addr.state}<br>
+            CEP: ${addr.postalCode ? addr.postalCode.replace(/^(\d{5})(\d{3})$/, '$1-$2') : '-'}<br>
+            ${addr.reference ? '<em>Ref: ' + addr.reference + '</em><br>' : ''}
+            ${addr.latitude ? '<span style="font-family: var(--font-mono); font-size: 0.75rem; color: #60a5fa;">GPS: ' + addr.latitude + ', ' + addr.longitude + '</span>' : ''}
+          `
+        } else {
+          modalAddress.textContent = 'Nenhum endereço cadastrado.'
+        }
+
+        // Contatos
+        const contacts = []
+        if (est.phone) contacts.push(`<span class="cnpj-tag">Tel: ${formatPhone(est.phone)}</span>`)
+        if (est.whatsapp) contacts.push(`<a href="https://wa.me/55${est.whatsapp.replace(/\D/g, '')}" target="_blank" class="cnpj-tag" style="color: #34d399; text-decoration: none;">WhatsApp: ${formatPhone(est.whatsapp)}</a>`)
+        if (est.email) contacts.push(`<a href="mailto:${est.email}" class="cnpj-tag" style="color: #60a5fa; text-decoration: none;">Email: ${est.email}</a>`)
+        if (est.website) contacts.push(`<a href="${est.website}" target="_blank" class="cnpj-tag" style="color: #a78bfa; text-decoration: none;">Site: ${est.website}</a>`)
+        if (est.instagram) contacts.push(`<a href="https://instagram.com/${est.instagram.replace('@', '')}" target="_blank" class="cnpj-tag" style="color: #f472b6; text-decoration: none;">Insta: ${est.instagram}</a>`)
+
+        modalContacts.innerHTML = contacts.length > 0 ? contacts.join('') : '<span style="color: var(--text-muted); font-size: 0.8125rem;">Nenhum canal informado.</span>'
+
+        modalRawJson.textContent = JSON.stringify(est, null, 2)
+        modalBackdrop.style.display = 'flex'
+      }
+
+      btnCloseModal.addEventListener('click', () => {
+        modalBackdrop.style.display = 'none'
+      })
+      modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) modalBackdrop.style.display = 'none'
+      })
+
+      // Alternar visualização Cards / Tabela
+      btnViewGrid.addEventListener('click', () => {
+        btnViewGrid.classList.add('active')
+        btnViewTable.classList.remove('active')
+        render()
+      })
+      btnViewTable.addEventListener('click', () => {
+        btnViewTable.classList.add('active')
+        btnViewGrid.classList.remove('active')
+        render()
+      })
+
+      // Event Listeners dos Filtros
+      searchInput.addEventListener('input', render)
+      statusFilter.addEventListener('change', render)
+      stateFilter.addEventListener('change', render)
+      btnRefresh.addEventListener('click', loadEstablishments)
+
+      // Carga Inicial
+      loadEstablishments()
+    </script>
+  </body>
+</html>
