@@ -32,8 +32,41 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class EstablishmentAddressSchema extends BaseModel {
+  static $columns = ['city', 'complement', 'createdAt', 'establishmentId', 'id', 'latitude', 'longitude', 'neighborhood', 'number', 'postalCode', 'reference', 'state', 'street', 'updatedAt'] as const
+  $columns = EstablishmentAddressSchema.$columns
+  @column()
+  declare city: string
+  @column()
+  declare complement: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare latitude: number | null
+  @column()
+  declare longitude: number | null
+  @column()
+  declare neighborhood: string
+  @column()
+  declare number: string
+  @column()
+  declare postalCode: string
+  @column()
+  declare reference: string | null
+  @column()
+  declare state: string
+  @column()
+  declare street: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class EstablishmentSchema extends BaseModel {
-  static $columns = ['cnpj', 'conversionFactor', 'createdAt', 'id', 'legalName', 'status', 'tradeName', 'updatedAt'] as const
+  static $columns = ['cnpj', 'conversionFactor', 'createdAt', 'email', 'id', 'instagram', 'legalName', 'phone', 'socialLinks', 'status', 'tradeName', 'updatedAt', 'website', 'whatsapp'] as const
   $columns = EstablishmentSchema.$columns
   @column()
   declare cnpj: string
@@ -41,16 +74,28 @@ export class EstablishmentSchema extends BaseModel {
   declare conversionFactor: number
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
+  @column()
+  declare email: string | null
   @column({ isPrimary: true })
   declare id: number
   @column()
+  declare instagram: string | null
+  @column()
   declare legalName: string
+  @column()
+  declare phone: string | null
+  @column()
+  declare socialLinks: any | null
   @column()
   declare status: string
   @column()
   declare tradeName: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
+  @column()
+  declare website: string | null
+  @column()
+  declare whatsapp: string | null
 }
 
 export class InvoiceItemSchema extends BaseModel {
