@@ -31,6 +31,13 @@ erDiagram
     LOYALTY_PROGRAMS ||--o{ POINT_RULES : "contém regras versionadas"
     POINT_RULES ||--o{ POINT_TRANSACTIONS : "referenciada na transação"
 
+    ESTABLISHMENTS ||--o{ REWARDS : "disponibiliza catalogo de recompensas"
+    ESTABLISHMENTS ||--o{ COUPON_REDEMPTIONS : "valida cupons no caixa"
+    REWARDS ||--o{ COUPON_REDEMPTIONS : "origina cupons resgatados"
+    USER_CUSTOMERS ||--o{ COUPON_REDEMPTIONS : "resgata cupons com pontos"
+    COUPON_REDEMPTIONS ||--o{ POINT_TRANSACTIONS : "vincula debito e estorno"
+    USERS ||--o{ COUPON_REDEMPTIONS : "operador valida no caixa"
+
     ESTABLISHMENTS {
         increments id PK
         string cnpj UK "14 dígitos limpos"
@@ -155,6 +162,7 @@ erDiagram
         integer customer_id FK "FK -> user_customers.id"
         integer establishment_id FK "FK -> establishments.id"
         integer invoice_id FK "Nullable -> invoices.id"
+        integer coupon_redemption_id FK "Nullable -> coupon_redemptions.id"
         integer rule_id FK "Nullable -> point_rules.id"
         integer rule_version "Nullable"
         string type "CREDIT | DEBIT | REVERSAL"
@@ -188,6 +196,43 @@ erDiagram
         integer points_per_base "Default: 1"
         decimal min_purchase_amount "Default: 0.00 (10,2)"
         integer max_points_per_purchase "Nullable"
+        timestamp created_at
+        timestamp updated_at "Nullable"
+    }
+
+    REWARDS {
+        increments id PK
+        integer establishment_id FK "FK -> establishments.id"
+        string title "Título da Recompensa"
+        text description "Nullable"
+        string discount_type "FIXED_AMOUNT | PERCENTAGE"
+        decimal discount_value "Valor em R$ ou % (10,2)"
+        decimal min_purchase_amount "Valor mínimo de compra (10,2)"
+        decimal max_discount_amount "Nullable - Teto em R$ se % (10,2)"
+        decimal points_cost "Custo em Pontos (10,2)"
+        integer stock "Nullable (NULL = ilimitado)"
+        integer validity_days "Default: 30"
+        string status "ACTIVE | INACTIVE | ARCHIVED"
+        timestamp created_at
+        timestamp updated_at "Nullable"
+    }
+
+    COUPON_REDEMPTIONS {
+        increments id PK
+        integer reward_id FK "FK -> rewards.id"
+        integer customer_id FK "FK -> user_customers.id"
+        integer establishment_id FK "FK -> establishments.id"
+        integer used_by_user_id FK "Nullable -> users.id (operador)"
+        string code UK "Código alfanumérico curto (ex: CSH-7A9B)"
+        string discount_type "Snapshot: FIXED_AMOUNT | PERCENTAGE"
+        decimal discount_value "Snapshot: Valor R$ ou % (10,2)"
+        decimal min_purchase_amount "Snapshot (10,2)"
+        decimal max_discount_amount "Snapshot (10,2)"
+        decimal points_cost "Snapshot: Pontos debitados (10,2)"
+        string status "ACTIVE | USED | EXPIRED | CANCELLED"
+        timestamp expires_at "Data/hora limite de uso"
+        timestamp used_at "Nullable"
+        timestamp cancelled_at "Nullable"
         timestamp created_at
         timestamp updated_at "Nullable"
     }
@@ -325,18 +370,19 @@ Armazena o saldo atual e o histórico acumulado de um consumidor em cada lojista
 - **Constraint Única:** `UNIQUE (customer_id, establishment_id)` — Garante exatamente 1 registro de saldo por cliente/tenant.
 
 ### 2.9 `point_transactions` (Extrato / Ledger Imutável de Pontos)
-Log de auditoria e movimentações financeiras de fidelidade (Task #5 & RN05).
+Log de auditoria e movimentações financeiras de fidelidade (Task #5 & RN05 & RN09).
 - `id` (PK, Increments)
 - `customer_id` (INTEGER UNSIGNED, NOT NULL, FK -> `user_customers.id` ON DELETE CASCADE)
 - `establishment_id` (INTEGER UNSIGNED, NOT NULL, FK -> `establishments.id` ON DELETE CASCADE)
-- `invoice_id` (INTEGER UNSIGNED, NULLABLE, FK -> `invoices.id` ON DELETE SET NULL): Nota fiscal que gerou a movimentação.
+- `invoice_id` (INTEGER UNSIGNED, NULLABLE, FK -> `invoices.id` ON DELETE SET NULL): Nota fiscal que gerou a movimentação de crédito.
+- `coupon_redemption_id` (INTEGER UNSIGNED, NULLABLE, FK -> `coupon_redemptions.id` ON DELETE SET NULL): Cupom resgatado que gerou o débito ou estorno.
 - `rule_id` (INTEGER UNSIGNED, NULLABLE, FK -> `point_rules.id` ON DELETE SET NULL): Regra de fidelidade aplicada.
 - `rule_version` (INTEGER, NULLABLE): Versão da regra no momento da transação.
 - `type` (VARCHAR(20), NOT NULL): Tipo da transação (`'CREDIT'`, `'DEBIT'`, `'REVERSAL'`).
 - `points` (DECIMAL(10,2), NOT NULL): Pontos creditados ou debitados.
 - `purchase_amount` (DECIMAL(10,2), NULLABLE): Valor da compra que originou os pontos.
 - `applied_conversion_factor` (DECIMAL(10,4), NULLABLE): Fator de conversão em vigor no cálculo.
-- `description` (VARCHAR(255), NOT NULL): Descrição amigável para o extrato.
+- `description` (VARCHAR(255), NOT NULL): Descrição amigável para o extrato (ex: "Resgate de Cupom R$ 10 OFF").
 - `metadata` (JSONB, NULLABLE): Dados complementares do cálculo e parâmetros aplicados.
 - `created_at` (TIMESTAMPTZ, NOT NULL)
 
@@ -367,6 +413,43 @@ Regras de cálculo de pontos customizáveis pelo lojista com histórico de versi
 - `updated_at` (TIMESTAMPTZ, NULLABLE)
 - **Constraint Única:** `UNIQUE (loyalty_program_id, version)` — Garante versionamento linear único por programa.
 
+### 2.12 `rewards` (Catálogo de Recompensas e Descontos do Lojista)
+Ofertas de cupons configuradas pelo lojista no Painel Admin Web para resgate por pontos (Task #10 / RN09).
+- `id` (PK, Increments)
+- `establishment_id` (INTEGER UNSIGNED, NOT NULL, FK -> `establishments.id` ON DELETE CASCADE): Tenant proprietário da recompensa.
+- `title` (VARCHAR(255), NOT NULL): Título da recompensa (ex: "R$ 15 OFF na próxima compra", "10% de Desconto").
+- `description` (TEXT, NULLABLE): Termos e condições adicionais de uso.
+- `discount_type` (VARCHAR(20), NOT NULL): Modalidade do benefício (`'FIXED_AMOUNT'`, `'PERCENTAGE'`).
+- `discount_value` (DECIMAL(10,2), NOT NULL): Valor nominal do desconto em Reais (ex: `15.00`) ou Percentual (ex: `10.00` para 10%).
+- `min_purchase_amount` (DECIMAL(10,2), NOT NULL, DEFAULT `0.00`): Compra mínima exigida no caixa para aplicar o cupom.
+- `max_discount_amount` (DECIMAL(10,2), NULLABLE): Teto máximo em R$ caso seja desconto percentual.
+- `points_cost` (DECIMAL(10,2), NOT NULL): Custo em pontos exigido para resgatar o cupom.
+- `stock` (INTEGER, NULLABLE): Quantidade máxima disponível para emissão (`NULL` para ilimitado).
+- `validity_days` (INTEGER, NOT NULL, DEFAULT `30`): Prazo em dias corridos de validade do cupom após resgate.
+- `status` (VARCHAR(20), NOT NULL, DEFAULT `'ACTIVE'`): (`'ACTIVE'`, `'INACTIVE'`, `'ARCHIVED'`).
+- `created_at` (TIMESTAMPTZ, NOT NULL)
+- `updated_at` (TIMESTAMPTZ, NULLABLE)
+
+### 2.13 `coupon_redemptions` (Cupons Resgatados e Ciclo de Vida de Validação)
+Cupons emitidos por clientes a partir da troca de pontos, com código alfanumérico e QR Code para uso no caixa (Tasks #11, #12, #13 / RN09, RN10, RN11, ADR-003).
+- `id` (PK, Increments)
+- `reward_id` (INTEGER UNSIGNED, NOT NULL, FK -> `rewards.id` ON DELETE RESTRICT): Recompensa de origem.
+- `customer_id` (INTEGER UNSIGNED, NOT NULL, FK -> `user_customers.id` ON DELETE CASCADE): Consumidor que realizou o resgate.
+- `establishment_id` (INTEGER UNSIGNED, NOT NULL, FK -> `establishments.id` ON DELETE CASCADE): Loja onde o cupom é válido.
+- `used_by_user_id` (INTEGER UNSIGNED, NULLABLE, FK -> `users.id` ON DELETE SET NULL): Operador do caixa que validou o cupom.
+- `code` (VARCHAR(20), UNIQUE, NOT NULL): Código alfanumérico curto e único de alta entropia (ex: `'CSH-7B8K2'`) para digitação no caixa ou encode em QR Code.
+- `discount_type` (VARCHAR(20), NOT NULL): Snapshot da modalidade no ato do resgate (`'FIXED_AMOUNT'`, `'PERCENTAGE'`).
+- `discount_value` (DECIMAL(10,2), NOT NULL): Snapshot do valor de desconto concedido.
+- `min_purchase_amount` (DECIMAL(10,2), NOT NULL, DEFAULT `0.00`): Snapshot da compra mínima exigida.
+- `max_discount_amount` (DECIMAL(10,2), NULLABLE): Snapshot do teto máximo de desconto.
+- `points_cost` (DECIMAL(10,2), NOT NULL): Snapshot dos pontos debitados no resgate.
+- `status` (VARCHAR(20), NOT NULL, DEFAULT `'ACTIVE'`): Máquina de estados: (`'ACTIVE'`, `'USED'`, `'EXPIRED'`, `'CANCELLED'`).
+- `expires_at` (TIMESTAMPTZ, NOT NULL): Data/hora limite de expiração do cupom.
+- `used_at` (TIMESTAMPTZ, NULLABLE): Data/hora em que foi validado e consumido no caixa.
+- `cancelled_at` (TIMESTAMPTZ, NULLABLE): Data/hora em que foi cancelado voluntariamente ou expirado.
+- `created_at` (TIMESTAMPTZ, NOT NULL)
+- `updated_at` (TIMESTAMPTZ, NULLABLE)
+
 ---
 
 ## 3. Mapeamento das Regras de Negócio e Tasks
@@ -382,6 +465,10 @@ Regras de cálculo de pontos customizáveis pelo lojista com histórico de versi
 | **Task #7 & RN05** | Inadimplência e Manutenção de Saldo | Se `establishments.status = 'INACTIVE'`, novas `invoices` são rejeitadas (`rejection_reason = 'LOJISTA_INATIVO'`), mas `point_balances` é preservado. |
 | **Task #8 & RN08** | Dashboard Lojista & Privacidade | Consultas do lojista filtram `user_customers` via `JOIN point_balances WHERE point_balances.establishment_id = :tenantId`. |
 | **Task #9 & ADR-001** | Push Notification FCM | `user_customers.device_token` armazena o token para notificações via Firebase Cloud Messaging. |
+| **Task #10 & RN09** | Gestão de Recompensas e Cupons | Tabela `rewards` gerenciada pelo lojista com custo em pontos, modalidade de desconto (fixo ou percentual) e validade. |
+| **Task #11 & RN09 & RN11 & ADR-003** | Resgate de Cupons Mobile e Débito | Criação de `coupon_redemptions` com código curto e QR Code; débito imediato com lock pessimista em `point_balances` e transação `DEBIT`. Bloqueado se `establishments.status = 'INACTIVE'`. Permite cancelamento voluntário com `REVERSAL`. |
+| **Task #12 & RN10 & ADR-003** | Validação e Consumo no Caixa | Operador do caixa busca cupom por `code` ou QR Code; sistema valida status `ACTIVE` e tenant correspondente com lock concorrencial e marca `used_at`. |
+| **Task #13 & RN09 & ADR-003** | Worker de Expiração e Estorno | Worker periódico que busca `coupon_redemptions` com status `ACTIVE` e `expires_at < now()`, atualiza para `EXPIRED` e estorna os pontos (`REVERSAL`). |
 
 ---
 
@@ -396,11 +483,13 @@ A integridade referencial e o isolamento multi-tenant são reforçados pelos seg
    - `user_customers.cpf` (UNIQUE)
    - `establishments.cnpj` (UNIQUE)
    - `invoices.access_key` (UNIQUE)
+   - `coupon_redemptions.code` (UNIQUE) — Busca e validação ultra-rápida no caixa.
 2. **Isolamento Multi-Tenant e Índices Compostos:**
    - `point_balances`: `UNIQUE (customer_id, establishment_id)`
    - `point_balances`: `INDEX (establishment_id, customer_id)`
    - `point_transactions`: `INDEX (establishment_id, customer_id, created_at)`
    - `point_transactions`: `INDEX (customer_id, created_at)`
+   - `point_transactions`: `INDEX (coupon_redemption_id)`
    - `invoices`: `INDEX (customer_id)`
    - `invoices`: `INDEX (establishment_id)`
    - `invoices`: `INDEX (status, created_at)`
@@ -408,6 +497,10 @@ A integridade referencial e o isolamento multi-tenant são reforçados pelos seg
    - `loyalty_programs`: `UNIQUE (establishment_id)`
    - `point_rules`: `UNIQUE (loyalty_program_id, version)`
    - `point_rules`: `INDEX (establishment_id, status)`
+   - `rewards`: `INDEX (establishment_id, status)` — Listagem rápida de recompensas ativas da loja.
+   - `coupon_redemptions`: `INDEX (customer_id, status)` — Listagem dos cupons do cliente no app móvel.
+   - `coupon_redemptions`: `INDEX (establishment_id, status)` — Filtro e relatórios no painel lojista.
+   - `coupon_redemptions`: `INDEX (status, expires_at)` — Varredura de cupons expirados para o worker de estorno automático.
 3. **Vitrine e Local Discovery (`establishment_addresses`):**
    - `establishment_addresses`: `UNIQUE (establishment_id)` — Relação 1:1 rigorosa por loja.
    - `establishment_addresses`: `INDEX (state, city)` — Otimiza buscas e listagens de lojistas por localização geográfica na vitrine.

@@ -269,16 +269,15 @@ Para o MVP, implementar e expor apenas os quatro primeiros templates. Os demais 
 7. Arredondar somente ao fim de cada regra conforme sua configuração; persistir o detalhe do cálculo, criar um crédito no extrato, atualizar o saldo e criar o lote de pontos em uma única transação de banco.
 8. Publicar `PointsAwardedEvent` somente depois do commit para disparar a notificação. Reprocessamentos devem ser idempotentes e não duplicar crédito ou push.
 
-## Regras de resgate e expiração
+## Regras de resgate e expiração (Cupons e Descontos)
 
-O painel já prevê conversão de pontos em descontos. Para não permitir saldo negativo ou uso duplo, o fluxo recomendado é:
+O sistema permite a conversão de pontos acumulados em cupons de desconto (valor fixo em R$ ou percentual %). Conforme formalizado na **RN09**, **RN10**, **RN11** e no **ADR-003**, o fluxo opera com débito atômico imediato e estorno automático:
 
-1. O cliente solicita uma recompensa; o backend bloqueia o saldo/lotes relevantes e cria um resgate `RESERVADO` com código curto e validade curta.
-2. O caixa confirma o código; em uma transação única, o resgate passa a `UTILIZADO`, os lotes são consumidos por vencimento mais próximo (FEFO), um débito entra no extrato e o saldo é atualizado.
-3. Cancelamento ou expiração da reserva libera os lotes, sem apagar o histórico da tentativa.
-4. Um job diário localiza lotes expirados ainda disponíveis, cria lançamento `EXPIRACAO` (ou `DEBITO` com subtipo), zera o lote e atualiza o saldo. O cliente recebe alerta antes do vencimento quando houver consentimento para push.
-
-O tipo atual de extrato deve evoluir para `CREDITO`, `DEBITO_RESERVADO`, `DEBITO`, `ESTORNO`, `EXPIRACAO` e `AJUSTE`. `AJUSTE` exige motivo e usuário administrativo, e deve ser excepcional.
+1. **Solicitação do Resgate (App Mobile):** O cliente escolhe uma recompensa ativa do estabelecimento. O backend executa transação com lock pessimista (`SELECT FOR UPDATE`) no registro de saldo (`point_balances`), valida se `current_balance >= points_cost` e se o estabelecimento está `ACTIVE` (RN11).
+2. **Débito Imediato e Emissão do Cupom:** Deduz o saldo, registra lançamento `DEBIT` em `point_transactions` e cria o cupom em `coupon_redemptions` com status `ACTIVE`, código único curto (ex: 6 a 8 caracteres), QR Code e data de expiração (`expires_at = now() + validity_days`).
+3. **Validação no Caixa (Painel Admin Web):** O operador digita o código ou escaneia o QR Code no caixa. O backend valida autenticação do tenant, status `ACTIVE` e prazo de validade. Com lock concorrencial, transiciona o cupom para `USED`, registrando `used_at` e `used_by_user_id`.
+4. **Cancelamento Voluntário pelo Consumidor:** O cliente pode cancelar um cupom ativo a qualquer momento antes do uso/expiração pelo app. O cupom passa para `CANCELLED` e os pontos são estornados instantaneamente via transação `REVERSAL`.
+5. **Expiração Automática e Estorno:** Um worker periódico (Task #13) identifica cupons com status `ACTIVE` cuja `expires_at < now()`, atualiza o status para `EXPIRED` e processa o estorno atômico dos pontos (`REVERSAL`), devolvendo o saldo ao cliente sem prejuízo ao direito adquirido.
 
 ## Personalização segura no painel
 

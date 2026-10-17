@@ -12,3 +12,8 @@ Este documento estabelece o vocabulário padrão (Domain-Driven Design) que deve
 *   **Saldo Histórico:** O registro consolidado dos pontos de um Consumidor em um determinado Estabelecimento, que não deve ser perdido nem mesmo se o lojista for bloqueado.
 *   **Inadimplência (ou Status Inativo) do Lojista:** Situação em que o Lojista não está em dia com a plataforma. Impede o cômputo de novos pontos, mas não oculta o Saldo Histórico do Consumidor.
 *   **Tenant (Inquilino):** O contexto de dados exclusivo de um Lojista.
+*   **Recompensa (Reward):** Configuração de benefício ofertada pelo Lojista no seu catálogo, definindo o custo em pontos, modalidade de desconto (fixo em R$ ou percentual %), valor do benefício, valor mínimo de compra, estoque e validade.
+*   **Cupom de Desconto (ou Voucher):** Instância de benefício resgatada pelo Consumidor a partir da troca de seus pontos acumulados. Contém código alfanumérico único curto, QR Code, prazo de expiração e status de utilização.
+*   **Código de Validação do Cupom:** Identificador alfanumérico curto (6 a 8 caracteres) e único gerado na emissão do cupom, utilizado pelo operador do caixa para busca e validação rápida no Painel Web.
+*   **Resgate de Pontos (Redemption):** Operação transacional atômica em que o Consumidor converte pontos em um Cupom de Desconto ativo, gerando débito (`DEBIT`) no extrato de pontos.
+*   **Estorno de Resgate (Reversal):** Operação atômica que credita novamente os pontos na conta do Consumidor (`REVERSAL`) em caso de cancelamento voluntário do cupom ou expiração do prazo de validade sem utilização.
