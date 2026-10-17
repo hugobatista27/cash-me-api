@@ -35,4 +35,3 @@ export default class Establishment extends EstablishmentSchema {
   @hasMany(() => Reward)
   declare rewards: HasMany<typeof Reward>
 }
-
