@@ -32,6 +32,7 @@ const CustomerInvoicesController = () => import('#controllers/customer_invoices_
 const CustomerPointsController = () => import('#controllers/customer_points_controller')
 const EstablishmentsController = () => import('#controllers/establishments_controller')
 const EstablishmentRulesController = () => import('#controllers/establishment_rules_controller')
+const EstablishmentRewardsController = () => import('#controllers/establishment_rewards_controller')
 
 router
   .group(() => {
@@ -66,11 +67,36 @@ router
         router.get('invoices', [CustomerInvoicesController, 'index'])
         router.get('invoices/:id', [CustomerInvoicesController, 'show'])
         router.get('balances', [CustomerPointsController, 'balances'])
-        router.get('establishments/:establishmentId/statement', [CustomerPointsController, 'statement'])
+        router.get('establishments/:establishmentId/statement', [
+          CustomerPointsController,
+          'statement',
+        ])
       })
       .prefix('customer')
       .as('customer')
       .use(middleware.auth())
+
+    // Rotas de Recompensas do Lojista (Task #10)
+    router
+      .group(() => {
+        router.get('/', [EstablishmentRewardsController, 'index'])
+        router
+          .post('/', [EstablishmentRewardsController, 'store'])
+          .use(middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN']))
+        router.get('/:id', [EstablishmentRewardsController, 'show'])
+        router
+          .put('/:id', [EstablishmentRewardsController, 'update'])
+          .use(middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN']))
+        router
+          .patch('/:id/toggle-status', [EstablishmentRewardsController, 'toggleStatus'])
+          .use(middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN']))
+      })
+      .prefix('establishments/rewards')
+      .as('establishments.rewards')
+      .use([
+        middleware.auth(),
+        middleware.role(['LOJISTA_ADMIN', 'LOJISTA_OPERADOR', 'SUPER_ADMIN']),
+      ])
 
     // Rotas de Estabelecimentos
     router
@@ -101,7 +127,9 @@ router
       })
       .prefix('establishment')
       .as('establishment')
-      .use([middleware.auth(), middleware.role(['LOJISTA_ADMIN', 'LOJISTA_OPERADOR', 'SUPER_ADMIN'])])
+      .use([
+        middleware.auth(),
+        middleware.role(['LOJISTA_ADMIN', 'LOJISTA_OPERADOR', 'SUPER_ADMIN']),
+      ])
   })
   .prefix('/api/v1')
-

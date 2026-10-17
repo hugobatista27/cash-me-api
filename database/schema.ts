@@ -250,6 +250,39 @@ export class PointTransactionSchema extends BaseModel {
   declare type: string
 }
 
+export class RewardSchema extends BaseModel {
+  static $columns = ['createdAt', 'description', 'discountType', 'discountValue', 'establishmentId', 'id', 'maxDiscountAmount', 'minPurchaseAmount', 'pointsCost', 'status', 'stock', 'title', 'updatedAt', 'validityDays'] as const
+  $columns = RewardSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare description: string | null
+  @column()
+  declare discountType: string
+  @column()
+  declare discountValue: number
+  @column()
+  declare establishmentId: number
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare maxDiscountAmount: number | null
+  @column()
+  declare minPurchaseAmount: number | null
+  @column()
+  declare pointsCost: number
+  @column()
+  declare status: string
+  @column()
+  declare stock: number | null
+  @column()
+  declare title: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare validityDays: number
+}
+
 export class UserCustomerSchema extends BaseModel {
   static $columns = ['authProvider', 'cpf', 'createdAt', 'deviceToken', 'fullName', 'id', 'phone', 'socialId', 'termsAcceptedAt', 'updatedAt', 'userId'] as const
   $columns = UserCustomerSchema.$columns
