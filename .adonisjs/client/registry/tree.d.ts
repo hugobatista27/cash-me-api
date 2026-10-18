@@ -45,6 +45,16 @@ export interface ApiDefinition {
     }
   }
   establishments: {
+    rewards: {
+      establishmentRewards: {
+        index: typeof routes['establishments.rewards.establishment_rewards.index']
+        store: typeof routes['establishments.rewards.establishment_rewards.store']
+        show: typeof routes['establishments.rewards.establishment_rewards.show']
+        update: typeof routes['establishments.rewards.establishment_rewards.update']
+        toggleStatus: typeof routes['establishments.rewards.establishment_rewards.toggle_status']
+      }
+      status: typeof routes['establishments.rewards.status']
+    }
     establishments: {
       index: typeof routes['establishments.establishments.index']
       show: typeof routes['establishments.establishments.show']

@@ -102,6 +102,42 @@ const routes = {
     tokens: [{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"api","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"establishments","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":1,"val":"establishmentId","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"statement","end":""}],
     types: placeholder as Registry['customer.customer_points.statement']['types'],
   },
+  'establishments.rewards.establishment_rewards.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishments/rewards',
+    tokens: [{"old":"/api/v1/establishments/rewards","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/rewards","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/rewards","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/rewards","type":0,"val":"rewards","end":""}],
+    types: placeholder as Registry['establishments.rewards.establishment_rewards.index']['types'],
+  },
+  'establishments.rewards.establishment_rewards.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/establishments/rewards',
+    tokens: [{"old":"/api/v1/establishments/rewards","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/rewards","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/rewards","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/rewards","type":0,"val":"rewards","end":""}],
+    types: placeholder as Registry['establishments.rewards.establishment_rewards.store']['types'],
+  },
+  'establishments.rewards.establishment_rewards.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishments/rewards/:id',
+    tokens: [{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"rewards","end":""},{"old":"/api/v1/establishments/rewards/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['establishments.rewards.establishment_rewards.show']['types'],
+  },
+  'establishments.rewards.establishment_rewards.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/establishments/rewards/:id',
+    tokens: [{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/rewards/:id","type":0,"val":"rewards","end":""},{"old":"/api/v1/establishments/rewards/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['establishments.rewards.establishment_rewards.update']['types'],
+  },
+  'establishments.rewards.establishment_rewards.toggle_status': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/establishments/rewards/:id/toggle-status',
+    tokens: [{"old":"/api/v1/establishments/rewards/:id/toggle-status","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/rewards/:id/toggle-status","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/rewards/:id/toggle-status","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/rewards/:id/toggle-status","type":0,"val":"rewards","end":""},{"old":"/api/v1/establishments/rewards/:id/toggle-status","type":1,"val":"id","end":""},{"old":"/api/v1/establishments/rewards/:id/toggle-status","type":0,"val":"toggle-status","end":""}],
+    types: placeholder as Registry['establishments.rewards.establishment_rewards.toggle_status']['types'],
+  },
+  'establishments.rewards.status': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/establishments/rewards/:id/status',
+    tokens: [{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"rewards","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":1,"val":"id","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"status","end":""}],
+    types: placeholder as Registry['establishments.rewards.status']['types'],
+  },
   'establishments.establishments.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/establishments',

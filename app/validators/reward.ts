@@ -11,7 +11,7 @@ import vine from '@vinejs/vine'
 export const createRewardValidator = vine.create({
   title: vine.string().trim().minLength(3).maxLength(255),
   description: vine.string().trim().maxLength(2000).nullable().optional(),
-  discountType: vine.enum(['FIXED', 'PERCENTAGE'] as const),
+  discountType: vine.enum(['FIXED', 'FIXED_AMOUNT', 'PERCENTAGE'] as const),
   discountValue: vine.number().positive(),
   minPurchaseAmount: vine.number().min(0).nullable().optional(),
   maxDiscountAmount: vine
@@ -23,7 +23,7 @@ export const createRewardValidator = vine.create({
   pointsCost: vine.number().min(1),
   stock: vine.number().min(0).nullable().optional(),
   validityDays: vine.number().min(1).optional(),
-  status: vine.enum(['ACTIVE', 'INACTIVE'] as const).optional(),
+  status: vine.enum(['ACTIVE', 'INACTIVE', 'ARCHIVED'] as const).optional(),
 })
 
 /**
@@ -32,7 +32,7 @@ export const createRewardValidator = vine.create({
 export const updateRewardValidator = vine.create({
   title: vine.string().trim().minLength(3).maxLength(255).optional(),
   description: vine.string().trim().maxLength(2000).nullable().optional(),
-  discountType: vine.enum(['FIXED', 'PERCENTAGE'] as const).optional(),
+  discountType: vine.enum(['FIXED', 'FIXED_AMOUNT', 'PERCENTAGE'] as const).optional(),
   discountValue: vine.number().positive().optional(),
   minPurchaseAmount: vine.number().min(0).nullable().optional(),
   maxDiscountAmount: vine
@@ -44,5 +44,5 @@ export const updateRewardValidator = vine.create({
   pointsCost: vine.number().min(1).optional(),
   stock: vine.number().min(0).nullable().optional(),
   validityDays: vine.number().min(1).optional(),
-  status: vine.enum(['ACTIVE', 'INACTIVE'] as const).optional(),
+  status: vine.enum(['ACTIVE', 'INACTIVE', 'ARCHIVED'] as const).optional(),
 })

@@ -199,6 +199,78 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_points_controller').default['statement']>>>
     }
   }
+  'establishments.rewards.establishment_rewards.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishments/rewards'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['index']>>>
+    }
+  }
+  'establishments.rewards.establishment_rewards.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/establishments/rewards'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/reward').createRewardValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/reward').createRewardValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.rewards.establishment_rewards.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishments/rewards/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['show']>>>
+    }
+  }
+  'establishments.rewards.establishment_rewards.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/establishments/rewards/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/reward').updateRewardValidator)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/reward').updateRewardValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.rewards.establishment_rewards.toggle_status': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/establishments/rewards/:id/toggle-status'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['toggleStatus']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['toggleStatus']>>>
+    }
+  }
+  'establishments.rewards.status': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/establishments/rewards/:id/status'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['toggleStatus']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['toggleStatus']>>>
+    }
+  }
   'establishments.establishments.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/establishments'

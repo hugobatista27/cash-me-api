@@ -90,6 +90,10 @@ router
         router
           .patch('/:id/toggle-status', [EstablishmentRewardsController, 'toggleStatus'])
           .use(middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN']))
+        router
+          .patch('/:id/status', [EstablishmentRewardsController, 'toggleStatus'])
+          .as('status')
+          .use(middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN']))
       })
       .prefix('establishments/rewards')
       .as('establishments.rewards')

@@ -20,6 +20,12 @@ export type ScannedRoutes = {
     'customer.customer_invoices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customer.customer_points.balances': { paramsTuple?: []; params?: {} }
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
+    'establishments.rewards.establishment_rewards.index': { paramsTuple?: []; params?: {} }
+    'establishments.rewards.establishment_rewards.store': { paramsTuple?: []; params?: {} }
+    'establishments.rewards.establishment_rewards.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.rewards.establishment_rewards.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.rewards.establishment_rewards.toggle_status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.rewards.status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.store': { paramsTuple?: []; params?: {} }
@@ -40,6 +46,8 @@ export type ScannedRoutes = {
     'customer.customer_invoices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customer.customer_points.balances': { paramsTuple?: []; params?: {} }
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
+    'establishments.rewards.establishment_rewards.index': { paramsTuple?: []; params?: {} }
+    'establishments.rewards.establishment_rewards.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.show_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -55,6 +63,8 @@ export type ScannedRoutes = {
     'customer.customer_invoices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customer.customer_points.balances': { paramsTuple?: []; params?: {} }
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
+    'establishments.rewards.establishment_rewards.index': { paramsTuple?: []; params?: {} }
+    'establishments.rewards.establishment_rewards.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
     'establishments.establishments.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.show_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -70,16 +80,20 @@ export type ScannedRoutes = {
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'customer.customer_invoices.process': { paramsTuple?: []; params?: {} }
+    'establishments.rewards.establishment_rewards.store': { paramsTuple?: []; params?: {} }
     'establishments.establishments.store': { paramsTuple?: []; params?: {} }
   }
   PUT: {
     'profile.user_customers.update': { paramsTuple?: []; params?: {} }
     'profile.user_establishments.update': { paramsTuple?: []; params?: {} }
+    'establishments.rewards.establishment_rewards.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.update_address': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishment.establishment_rules.update': { paramsTuple?: []; params?: {} }
   }
   PATCH: {
+    'establishments.rewards.establishment_rewards.toggle_status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'establishments.rewards.status': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.approve': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
