@@ -32,6 +32,35 @@ export class AuthAccessTokenSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class CouponRedemptionSchema extends BaseModel {
+  static $columns = ['cancelledAt', 'code', 'createdAt', 'customerId', 'establishmentId', 'expiresAt', 'id', 'pointsCost', 'rewardId', 'status', 'updatedAt', 'usedAt'] as const
+  $columns = CouponRedemptionSchema.$columns
+  @column.dateTime()
+  declare cancelledAt: DateTime | null
+  @column()
+  declare code: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare customerId: number
+  @column()
+  declare establishmentId: number
+  @column.dateTime()
+  declare expiresAt: DateTime
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare pointsCost: number
+  @column()
+  declare rewardId: number
+  @column()
+  declare status: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column.dateTime()
+  declare usedAt: DateTime | null
+}
+
 export class EstablishmentAddressSchema extends BaseModel {
   static $columns = ['city', 'complement', 'createdAt', 'establishmentId', 'id', 'latitude', 'longitude', 'neighborhood', 'number', 'postalCode', 'reference', 'state', 'street', 'updatedAt'] as const
   $columns = EstablishmentAddressSchema.$columns
@@ -220,10 +249,12 @@ export class PointRuleSchema extends BaseModel {
 }
 
 export class PointTransactionSchema extends BaseModel {
-  static $columns = ['appliedConversionFactor', 'createdAt', 'customerId', 'description', 'establishmentId', 'id', 'invoiceId', 'metadata', 'points', 'purchaseAmount', 'ruleId', 'ruleVersion', 'type'] as const
+  static $columns = ['appliedConversionFactor', 'couponRedemptionId', 'createdAt', 'customerId', 'description', 'establishmentId', 'id', 'invoiceId', 'metadata', 'points', 'purchaseAmount', 'ruleId', 'ruleVersion', 'type'] as const
   $columns = PointTransactionSchema.$columns
   @column()
   declare appliedConversionFactor: number | null
+  @column()
+  declare couponRedemptionId: number | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()

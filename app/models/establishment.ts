@@ -9,6 +9,7 @@ import LoyaltyProgram from '#models/loyalty_program'
 import PointRule from '#models/point_rule'
 import EstablishmentAddress from '#models/establishment_address'
 import Reward from '#models/reward'
+import CouponRedemption from '#models/coupon_redemption'
 
 export default class Establishment extends EstablishmentSchema {
   @hasOne(() => EstablishmentAddress)
@@ -34,4 +35,7 @@ export default class Establishment extends EstablishmentSchema {
 
   @hasMany(() => Reward)
   declare rewards: HasMany<typeof Reward>
+
+  @hasMany(() => CouponRedemption)
+  declare couponRedemptions: HasMany<typeof CouponRedemption>
 }

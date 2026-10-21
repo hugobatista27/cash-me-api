@@ -30,6 +30,7 @@ router.get('/docs', async () => {
 
 const CustomerInvoicesController = () => import('#controllers/customer_invoices_controller')
 const CustomerPointsController = () => import('#controllers/customer_points_controller')
+const CustomerCouponsController = () => import('#controllers/customer_coupons_controller')
 const EstablishmentsController = () => import('#controllers/establishments_controller')
 const EstablishmentRulesController = () => import('#controllers/establishment_rules_controller')
 const EstablishmentRewardsController = () => import('#controllers/establishment_rewards_controller')
@@ -60,7 +61,7 @@ router
       .as('profile')
       .use(middleware.auth())
 
-    // Rotas do Consumidor (NFC-e e Pontos)
+    // Rotas do Consumidor (NFC-e, Pontos e Cupons - Tasks #5, #11)
     router
       .group(() => {
         router.post('invoices/process', [CustomerInvoicesController, 'process'])
@@ -71,6 +72,12 @@ router
           CustomerPointsController,
           'statement',
         ])
+
+        // Resgate e Gestão de Cupons (Task #11 & ADR-003)
+        router.get('establishments/:id/rewards', [CustomerCouponsController, 'rewards'])
+        router.post('rewards/:id/redeem', [CustomerCouponsController, 'redeem'])
+        router.post('coupons/:id/cancel', [CustomerCouponsController, 'cancel'])
+        router.get('coupons', [CustomerCouponsController, 'index'])
       })
       .prefix('customer')
       .as('customer')

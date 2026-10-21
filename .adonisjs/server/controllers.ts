@@ -5,6 +5,7 @@
 
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
+  CustomerCoupons: () => import('#controllers/customer_coupons_controller'),
   CustomerInvoices: () => import('#controllers/customer_invoices_controller'),
   CustomerPoints: () => import('#controllers/customer_points_controller'),
   EstablishmentRewards: () => import('#controllers/establishment_rewards_controller'),

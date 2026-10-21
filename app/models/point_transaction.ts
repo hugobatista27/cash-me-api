@@ -5,6 +5,7 @@ import UserCustomer from '#models/user_customer'
 import Establishment from '#models/establishment'
 import Invoice from '#models/invoice'
 import PointRule from '#models/point_rule'
+import CouponRedemption from '#models/coupon_redemption'
 
 export default class PointTransaction extends PointTransactionSchema {
   @belongsTo(() => UserCustomer, { foreignKey: 'customerId' })
@@ -18,4 +19,7 @@ export default class PointTransaction extends PointTransactionSchema {
 
   @belongsTo(() => PointRule, { foreignKey: 'ruleId' })
   declare rule: BelongsTo<typeof PointRule>
+
+  @belongsTo(() => CouponRedemption, { foreignKey: 'couponRedemptionId' })
+  declare couponRedemption: BelongsTo<typeof CouponRedemption>
 }
