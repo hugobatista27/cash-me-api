@@ -33,7 +33,7 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class CouponRedemptionSchema extends BaseModel {
-  static $columns = ['cancelledAt', 'code', 'createdAt', 'customerId', 'establishmentId', 'expiresAt', 'id', 'pointsCost', 'rewardId', 'status', 'updatedAt', 'usedAt'] as const
+  static $columns = ['cancelledAt', 'code', 'createdAt', 'customerId', 'establishmentId', 'expiresAt', 'id', 'pointsCost', 'rewardId', 'status', 'updatedAt', 'usedAt', 'usedByUserId'] as const
   $columns = CouponRedemptionSchema.$columns
   @column.dateTime()
   declare cancelledAt: DateTime | null
@@ -59,6 +59,8 @@ export class CouponRedemptionSchema extends BaseModel {
   declare updatedAt: DateTime | null
   @column.dateTime()
   declare usedAt: DateTime | null
+  @column()
+  declare usedByUserId: number | null
 }
 
 export class EstablishmentAddressSchema extends BaseModel {

@@ -34,6 +34,7 @@ const CustomerCouponsController = () => import('#controllers/customer_coupons_co
 const EstablishmentsController = () => import('#controllers/establishments_controller')
 const EstablishmentRulesController = () => import('#controllers/establishment_rules_controller')
 const EstablishmentRewardsController = () => import('#controllers/establishment_rewards_controller')
+const EstablishmentCouponsController = () => import('#controllers/establishment_coupons_controller')
 
 router
   .group(() => {
@@ -104,6 +105,19 @@ router
       })
       .prefix('establishments/rewards')
       .as('establishments.rewards')
+      .use([
+        middleware.auth(),
+        middleware.role(['LOJISTA_ADMIN', 'LOJISTA_OPERADOR', 'SUPER_ADMIN']),
+      ])
+
+    // Rotas de Validação e Consumo de Cupons no Caixa (Task #12, RN10, ADR-002, ADR-003)
+    router
+      .group(() => {
+        router.post('verify', [EstablishmentCouponsController, 'verify'])
+        router.post('consume', [EstablishmentCouponsController, 'consume'])
+      })
+      .prefix('establishments/coupons')
+      .as('establishments.coupons')
       .use([
         middleware.auth(),
         middleware.role(['LOJISTA_ADMIN', 'LOJISTA_OPERADOR', 'SUPER_ADMIN']),

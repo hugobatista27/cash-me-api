@@ -8,6 +8,7 @@ export const controllers = {
   CustomerCoupons: () => import('#controllers/customer_coupons_controller'),
   CustomerInvoices: () => import('#controllers/customer_invoices_controller'),
   CustomerPoints: () => import('#controllers/customer_points_controller'),
+  EstablishmentCoupons: () => import('#controllers/establishment_coupons_controller'),
   EstablishmentRewards: () => import('#controllers/establishment_rewards_controller'),
   EstablishmentRules: () => import('#controllers/establishment_rules_controller'),
   Establishments: () => import('#controllers/establishments_controller'),

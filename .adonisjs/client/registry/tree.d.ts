@@ -61,6 +61,12 @@ export interface ApiDefinition {
       }
       status: typeof routes['establishments.rewards.status']
     }
+    coupons: {
+      establishmentCoupons: {
+        verify: typeof routes['establishments.coupons.establishment_coupons.verify']
+        consume: typeof routes['establishments.coupons.establishment_coupons.consume']
+      }
+    }
     establishments: {
       index: typeof routes['establishments.establishments.index']
       show: typeof routes['establishments.establishments.show']

@@ -319,6 +319,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rewards_controller').default['toggleStatus']>>>
     }
   }
+  'establishments.coupons.establishment_coupons.verify': {
+    methods: ["POST"]
+    pattern: '/api/v1/establishments/coupons/verify'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/coupon_validator').verifyCouponValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/coupon_validator').verifyCouponValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_coupons_controller').default['verify']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_coupons_controller').default['verify']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'establishments.coupons.establishment_coupons.consume': {
+    methods: ["POST"]
+    pattern: '/api/v1/establishments/coupons/consume'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/coupon_validator').consumeCouponValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/coupon_validator').consumeCouponValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_coupons_controller').default['consume']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_coupons_controller').default['consume']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
   'establishments.establishments.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/establishments'

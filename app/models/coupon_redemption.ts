@@ -16,6 +16,9 @@ export default class CouponRedemption extends CouponRedemptionSchema {
   @belongsTo(() => Reward, { foreignKey: 'rewardId' })
   declare reward: BelongsTo<typeof Reward>
 
+  @belongsTo(() => User, { foreignKey: 'usedByUserId' })
+  declare usedByUser: BelongsTo<typeof User>
+
   @hasOne(() => PointTransaction, { foreignKey: 'couponRedemptionId' })
   declare pointTransaction: HasOne<typeof PointTransaction>
 }

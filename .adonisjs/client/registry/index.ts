@@ -162,6 +162,18 @@ const routes = {
     tokens: [{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"rewards","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":1,"val":"id","end":""},{"old":"/api/v1/establishments/rewards/:id/status","type":0,"val":"status","end":""}],
     types: placeholder as Registry['establishments.rewards.status']['types'],
   },
+  'establishments.coupons.establishment_coupons.verify': {
+    methods: ["POST"],
+    pattern: '/api/v1/establishments/coupons/verify',
+    tokens: [{"old":"/api/v1/establishments/coupons/verify","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/coupons/verify","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/coupons/verify","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/coupons/verify","type":0,"val":"coupons","end":""},{"old":"/api/v1/establishments/coupons/verify","type":0,"val":"verify","end":""}],
+    types: placeholder as Registry['establishments.coupons.establishment_coupons.verify']['types'],
+  },
+  'establishments.coupons.establishment_coupons.consume': {
+    methods: ["POST"],
+    pattern: '/api/v1/establishments/coupons/consume',
+    tokens: [{"old":"/api/v1/establishments/coupons/consume","type":0,"val":"api","end":""},{"old":"/api/v1/establishments/coupons/consume","type":0,"val":"v1","end":""},{"old":"/api/v1/establishments/coupons/consume","type":0,"val":"establishments","end":""},{"old":"/api/v1/establishments/coupons/consume","type":0,"val":"coupons","end":""},{"old":"/api/v1/establishments/coupons/consume","type":0,"val":"consume","end":""}],
+    types: placeholder as Registry['establishments.coupons.establishment_coupons.consume']['types'],
+  },
   'establishments.establishments.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/establishments',
