@@ -3,4 +3,8 @@
  * DO NOT EDIT manually
  */
 
-export const events = {}
+import CouponExpiredEvent from '#events/coupon_expired_event'
+
+export const events = {
+  CouponExpiredEvent: CouponExpiredEvent,
+}
