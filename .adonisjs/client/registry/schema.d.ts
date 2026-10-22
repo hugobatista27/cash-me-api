@@ -199,6 +199,54 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_points_controller').default['statement']>>>
     }
   }
+  'customer.customer_coupons.rewards': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/customer/establishments/:id/rewards'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['rewards']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['rewards']>>>
+    }
+  }
+  'customer.customer_coupons.redeem': {
+    methods: ["POST"]
+    pattern: '/api/v1/customer/rewards/:id/redeem'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['redeem']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['redeem']>>>
+    }
+  }
+  'customer.customer_coupons.cancel': {
+    methods: ["POST"]
+    pattern: '/api/v1/customer/coupons/:id/cancel'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['cancel']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['cancel']>>>
+    }
+  }
+  'customer.customer_coupons.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/customer/coupons'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/customer_coupons_controller').default['index']>>>
+    }
+  }
   'establishments.rewards.establishment_rewards.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/establishments/rewards'

@@ -102,6 +102,30 @@ const routes = {
     tokens: [{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"api","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"establishments","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":1,"val":"establishmentId","end":""},{"old":"/api/v1/customer/establishments/:establishmentId/statement","type":0,"val":"statement","end":""}],
     types: placeholder as Registry['customer.customer_points.statement']['types'],
   },
+  'customer.customer_coupons.rewards': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/customer/establishments/:id/rewards',
+    tokens: [{"old":"/api/v1/customer/establishments/:id/rewards","type":0,"val":"api","end":""},{"old":"/api/v1/customer/establishments/:id/rewards","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/establishments/:id/rewards","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/establishments/:id/rewards","type":0,"val":"establishments","end":""},{"old":"/api/v1/customer/establishments/:id/rewards","type":1,"val":"id","end":""},{"old":"/api/v1/customer/establishments/:id/rewards","type":0,"val":"rewards","end":""}],
+    types: placeholder as Registry['customer.customer_coupons.rewards']['types'],
+  },
+  'customer.customer_coupons.redeem': {
+    methods: ["POST"],
+    pattern: '/api/v1/customer/rewards/:id/redeem',
+    tokens: [{"old":"/api/v1/customer/rewards/:id/redeem","type":0,"val":"api","end":""},{"old":"/api/v1/customer/rewards/:id/redeem","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/rewards/:id/redeem","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/rewards/:id/redeem","type":0,"val":"rewards","end":""},{"old":"/api/v1/customer/rewards/:id/redeem","type":1,"val":"id","end":""},{"old":"/api/v1/customer/rewards/:id/redeem","type":0,"val":"redeem","end":""}],
+    types: placeholder as Registry['customer.customer_coupons.redeem']['types'],
+  },
+  'customer.customer_coupons.cancel': {
+    methods: ["POST"],
+    pattern: '/api/v1/customer/coupons/:id/cancel',
+    tokens: [{"old":"/api/v1/customer/coupons/:id/cancel","type":0,"val":"api","end":""},{"old":"/api/v1/customer/coupons/:id/cancel","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/coupons/:id/cancel","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/coupons/:id/cancel","type":0,"val":"coupons","end":""},{"old":"/api/v1/customer/coupons/:id/cancel","type":1,"val":"id","end":""},{"old":"/api/v1/customer/coupons/:id/cancel","type":0,"val":"cancel","end":""}],
+    types: placeholder as Registry['customer.customer_coupons.cancel']['types'],
+  },
+  'customer.customer_coupons.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/customer/coupons',
+    tokens: [{"old":"/api/v1/customer/coupons","type":0,"val":"api","end":""},{"old":"/api/v1/customer/coupons","type":0,"val":"v1","end":""},{"old":"/api/v1/customer/coupons","type":0,"val":"customer","end":""},{"old":"/api/v1/customer/coupons","type":0,"val":"coupons","end":""}],
+    types: placeholder as Registry['customer.customer_coupons.index']['types'],
+  },
   'establishments.rewards.establishment_rewards.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/establishments/rewards',

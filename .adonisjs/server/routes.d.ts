@@ -20,6 +20,10 @@ export type ScannedRoutes = {
     'customer.customer_invoices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customer.customer_points.balances': { paramsTuple?: []; params?: {} }
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
+    'customer.customer_coupons.rewards': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'customer.customer_coupons.redeem': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'customer.customer_coupons.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'customer.customer_coupons.index': { paramsTuple?: []; params?: {} }
     'establishments.rewards.establishment_rewards.index': { paramsTuple?: []; params?: {} }
     'establishments.rewards.establishment_rewards.store': { paramsTuple?: []; params?: {} }
     'establishments.rewards.establishment_rewards.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -46,6 +50,8 @@ export type ScannedRoutes = {
     'customer.customer_invoices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customer.customer_points.balances': { paramsTuple?: []; params?: {} }
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
+    'customer.customer_coupons.rewards': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'customer.customer_coupons.index': { paramsTuple?: []; params?: {} }
     'establishments.rewards.establishment_rewards.index': { paramsTuple?: []; params?: {} }
     'establishments.rewards.establishment_rewards.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
@@ -63,6 +69,8 @@ export type ScannedRoutes = {
     'customer.customer_invoices.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'customer.customer_points.balances': { paramsTuple?: []; params?: {} }
     'customer.customer_points.statement': { paramsTuple: [ParamValue]; params: {'establishmentId': ParamValue} }
+    'customer.customer_coupons.rewards': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'customer.customer_coupons.index': { paramsTuple?: []; params?: {} }
     'establishments.rewards.establishment_rewards.index': { paramsTuple?: []; params?: {} }
     'establishments.rewards.establishment_rewards.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.establishments.index': { paramsTuple?: []; params?: {} }
@@ -80,6 +88,8 @@ export type ScannedRoutes = {
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'customer.customer_invoices.process': { paramsTuple?: []; params?: {} }
+    'customer.customer_coupons.redeem': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'customer.customer_coupons.cancel': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'establishments.rewards.establishment_rewards.store': { paramsTuple?: []; params?: {} }
     'establishments.establishments.store': { paramsTuple?: []; params?: {} }
   }

@@ -43,6 +43,12 @@ export interface ApiDefinition {
       balances: typeof routes['customer.customer_points.balances']
       statement: typeof routes['customer.customer_points.statement']
     }
+    customerCoupons: {
+      rewards: typeof routes['customer.customer_coupons.rewards']
+      redeem: typeof routes['customer.customer_coupons.redeem']
+      cancel: typeof routes['customer.customer_coupons.cancel']
+      index: typeof routes['customer.customer_coupons.index']
+    }
   }
   establishments: {
     rewards: {
