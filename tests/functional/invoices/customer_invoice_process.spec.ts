@@ -103,7 +103,7 @@ test.group('Functional | Customer Invoices & Points Engine', (group) => {
       password: 'password123',
       userType: 'CUSTOMER',
     })
-    const customer = await UserCustomer.create({
+    await UserCustomer.create({
       userId: user.id,
       fullName: 'Beatriz Costa',
     })
@@ -135,9 +135,7 @@ test.group('Functional | Customer Invoices & Points Engine', (group) => {
       })
 
     // Consultar saldos consolidados do consumidor (App Mobile)
-    const balancesResponse = await client
-      .get('/api/v1/customer/balances')
-      .loginAs(user)
+    const balancesResponse = await client.get('/api/v1/customer/balances').loginAs(user)
 
     balancesResponse.assertStatus(200)
     const balancesData = balancesResponse.body().data
@@ -146,11 +144,13 @@ test.group('Functional | Customer Invoices & Points Engine', (group) => {
     const balanceA = balancesData.find((b: any) => b.establishmentId === shopA.id)
     const balanceB = balancesData.find((b: any) => b.establishmentId === shopB.id)
 
-    assert.equal(balanceA.currentBalance, 50)
-    assert.equal(balanceA.establishment.tradeName, 'Loja A')
+    assert.isDefined(balanceA)
+    assert.isDefined(balanceB)
+    assert.equal(balanceA!.currentBalance, 50)
+    assert.equal(balanceA!.establishment.tradeName, 'Loja A')
 
-    assert.equal(balanceB.currentBalance, 80)
-    assert.equal(balanceB.establishment.tradeName, 'Loja B')
+    assert.equal(balanceB!.currentBalance, 80)
+    assert.equal(balanceB!.establishment.tradeName, 'Loja B')
 
     // Extrato da Loja A deve trazer apenas transações da Loja A
     const statementAResponse = await client
@@ -195,10 +195,7 @@ test.group('Functional | Customer Invoices & Points Engine', (group) => {
     }
 
     // Primeira submissão com sucesso
-    const first = await client
-      .post('/api/v1/customer/invoices/process')
-      .loginAs(user)
-      .json(payload)
+    const first = await client.post('/api/v1/customer/invoices/process').loginAs(user).json(payload)
     first.assertStatus(200)
 
     // Segunda submissão da mesma nota
@@ -291,7 +288,9 @@ test.group('Functional | Customer Invoices & Points Engine', (group) => {
         issuerCnpj: '12345678000195',
         issuedAt: DateTime.now().minus({ hours: 1 }).toISO(),
         totalAmount: 30.0,
-        items: [{ rawDescription: 'Bolo de Cenoura', quantity: 1, unitPrice: 30.0, totalPrice: 30.0 }],
+        items: [
+          { rawDescription: 'Bolo de Cenoura', quantity: 1, unitPrice: 30.0, totalPrice: 30.0 },
+        ],
       })
 
     const invoiceId = processRes.body().data.invoice.id

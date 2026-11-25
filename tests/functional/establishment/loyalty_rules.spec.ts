@@ -35,9 +35,7 @@ test.group('Functional | Establishment Loyalty Rules', (group) => {
       role: 'LOJISTA_ADMIN',
     })
 
-    const response = await client
-      .get('/api/v1/establishment/loyalty-rule')
-      .loginAs(adminUser)
+    const response = await client.get('/api/v1/establishment/loyalty-rule').loginAs(adminUser)
 
     console.log('GET 1 Status:', response.status())
     console.log('GET 1 Body:', JSON.stringify(response.body()))
@@ -149,14 +147,11 @@ test.group('Functional | Establishment Loyalty Rules', (group) => {
     })
 
     // Configura regra R$ 10 = 1 ponto
-    await client
-      .put('/api/v1/establishment/loyalty-rule')
-      .loginAs(adminUser)
-      .json({
-        baseAmount: 10.0,
-        pointsPerBase: 1,
-        minPurchaseAmount: 0.0,
-      })
+    await client.put('/api/v1/establishment/loyalty-rule').loginAs(adminUser).json({
+      baseAmount: 10.0,
+      pointsPerBase: 1,
+      minPurchaseAmount: 0.0,
+    })
 
     // Simula compra de R$ 157.80 -> 15 pontos
     const simRes = await client
@@ -195,13 +190,10 @@ test.group('Functional | Establishment Loyalty Rules', (group) => {
 
     // Cria v1 e depois v2
     await client.get('/api/v1/establishment/loyalty-rule').loginAs(adminUser)
-    await client
-      .put('/api/v1/establishment/loyalty-rule')
-      .loginAs(adminUser)
-      .json({
-        baseAmount: 10.0,
-        pointsPerBase: 1,
-      })
+    await client.put('/api/v1/establishment/loyalty-rule').loginAs(adminUser).json({
+      baseAmount: 10.0,
+      pointsPerBase: 1,
+    })
 
     const histRes = await client
       .get('/api/v1/establishment/loyalty-rule/history')
@@ -241,15 +233,12 @@ test.group('Functional | Establishment Loyalty Rules', (group) => {
     })
 
     // Lojista configura regra: R$ 10 = 1 ponto, compra mínima R$ 30,00
-    const ruleRes = await client
-      .put('/api/v1/establishment/loyalty-rule')
-      .loginAs(adminUser)
-      .json({
-        baseAmount: 10.0,
-        pointsPerBase: 1,
-        minPurchaseAmount: 30.0,
-        name: 'Regra Especial 1 pt por R$ 10',
-      })
+    const ruleRes = await client.put('/api/v1/establishment/loyalty-rule').loginAs(adminUser).json({
+      baseAmount: 10.0,
+      pointsPerBase: 1,
+      minPurchaseAmount: 30.0,
+      name: 'Regra Especial 1 pt por R$ 10',
+    })
     const ruleId = ruleRes.body().data.id
 
     // Consumidor autenticado envia NFC-e de R$ 95,00
@@ -322,9 +311,7 @@ test.group('Functional | Establishment Loyalty Rules', (group) => {
     })
 
     // Operador pode consultar
-    const getRes = await client
-      .get('/api/v1/establishment/loyalty-rule')
-      .loginAs(operatorUser)
+    const getRes = await client.get('/api/v1/establishment/loyalty-rule').loginAs(operatorUser)
     getRes.assertStatus(200)
 
     // Operador é bloqueado ao tentar alterar (403)
@@ -348,9 +335,7 @@ test.group('Functional | Establishment Loyalty Rules', (group) => {
       fullName: 'Cliente Bloqueado',
     })
 
-    const custGetRes = await client
-      .get('/api/v1/establishment/loyalty-rule')
-      .loginAs(customerUser)
+    const custGetRes = await client.get('/api/v1/establishment/loyalty-rule').loginAs(customerUser)
     custGetRes.assertStatus(403)
   })
 })

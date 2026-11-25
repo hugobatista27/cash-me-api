@@ -1,5 +1,6 @@
 import User from '#models/user'
 import UserCustomer from '#models/user_customer'
+import db from '@adonisjs/lucid/services/db'
 import { signupCustomerValidator, updateCustomerValidator } from '#validators/user_customer'
 import type { HttpContext } from '@adonisjs/core/http'
 import UserTransformer from '#transformers/user_transformer'
@@ -16,21 +17,31 @@ export default class UserCustomersController {
   async store({ request, serialize }: HttpContext) {
     const payload = await request.validateUsing(signupCustomerValidator)
 
-    const user = await User.create({
-      email: payload.email,
-      password: payload.password,
-      userType: 'CUSTOMER',
-      status: 'ACTIVE',
-    })
+    const { user, customerProfile } = await db.transaction(async (trx) => {
+      const createdUser = await User.create(
+        {
+          email: payload.email,
+          password: payload.password,
+          userType: 'CUSTOMER',
+          status: 'ACTIVE',
+        },
+        { client: trx }
+      )
 
-    const customerProfile = await UserCustomer.create({
-      userId: user.id,
-      fullName: payload.fullName,
-      cpf: payload.cpf,
-      phone: payload.phone,
-      authProvider: 'LOCAL',
-      termsAcceptedAt: payload.termsAccepted ? DateTime.now() : null,
-      deviceToken: payload.deviceToken,
+      const createdProfile = await UserCustomer.create(
+        {
+          userId: createdUser.id,
+          fullName: payload.fullName,
+          cpf: payload.cpf,
+          phone: payload.phone,
+          authProvider: 'LOCAL',
+          termsAcceptedAt: payload.termsAccepted ? DateTime.now() : null,
+          deviceToken: payload.deviceToken,
+        },
+        { client: trx }
+      )
+
+      return { user: createdUser, customerProfile: createdProfile }
     })
 
     const token = await User.accessTokens.create(user)
@@ -49,7 +60,7 @@ export default class UserCustomersController {
    */
   async show({ auth, serialize, response }: HttpContext) {
     const user = auth.getUserOrFail()
-    await user.load('customerProfile')
+    await user.load((loader) => loader.load('customerProfile'))
 
     if (!user.customerProfile) {
       return response.notFound({ message: 'Customer profile not found' })
@@ -69,7 +80,7 @@ export default class UserCustomersController {
    */
   async update({ auth, request, serialize, response }: HttpContext) {
     const user = auth.getUserOrFail()
-    await user.load('customerProfile')
+    await user.load((loader) => loader.load('customerProfile'))
 
     if (!user.customerProfile) {
       return response.notFound({ message: 'Customer profile not found' })

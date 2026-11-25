@@ -3,7 +3,6 @@ import PointBalance from '#models/point_balance'
 import PointTransaction from '#models/point_transaction'
 import PointBalanceTransformer from '#transformers/point_balance_transformer'
 import PointTransactionTransformer from '#transformers/point_transaction_transformer'
-import EstablishmentTransformer from '#transformers/establishment_transformer'
 
 export default class CustomerPointsController {
   /**

@@ -5,6 +5,13 @@ import Establishment from '#models/establishment'
 import CouponRedemption from '#models/coupon_redemption'
 import { verifyCouponValidator, consumeCouponValidator } from '#validators/coupon_validator'
 
+function maskCpf(cpf?: string | null): string | null {
+  if (!cpf) return null
+  const digits = cpf.replace(/\D/g, '')
+  if (digits.length < 2) return '***'
+  return `***.***.***-${digits.slice(-2)}`
+}
+
 export default class EstablishmentCouponsController {
   /**
    * Helper para carregar o estabelecimento vinculado ao usuário operador/admin autenticado
@@ -31,6 +38,13 @@ export default class EstablishmentCouponsController {
 
     if (!establishment) {
       return response.forbidden({ message: 'Perfil de estabelecimento não encontrado.' })
+    }
+
+    if (establishment.status === 'PENDING') {
+      return response.forbidden({
+        message: 'Estabelecimento pendente de aprovação não pode validar cupons no caixa.',
+        code: 'E_ESTABLISHMENT_PENDING',
+      })
     }
 
     const payload = await request.validateUsing(verifyCouponValidator)
@@ -72,6 +86,13 @@ export default class EstablishmentCouponsController {
       })
     }
 
+    if (coupon.status === 'EXPIRED') {
+      return response.badRequest({
+        message: 'Este cupom está expirado.',
+        code: 'E_COUPON_EXPIRED',
+      })
+    }
+
     if (coupon.status !== 'ACTIVE') {
       return response.badRequest({
         message: 'Este cupom não está ativo.',
@@ -109,7 +130,7 @@ export default class EstablishmentCouponsController {
       customer: {
         id: customer.id,
         fullName: customer.customerProfile?.fullName ?? 'Consumidor',
-        cpf: customer.customerProfile?.cpf ?? null,
+        cpf: maskCpf(customer.customerProfile?.cpf),
       },
     })
   }
@@ -125,6 +146,13 @@ export default class EstablishmentCouponsController {
 
     if (!establishment) {
       return response.forbidden({ message: 'Perfil de estabelecimento não encontrado.' })
+    }
+
+    if (establishment.status === 'PENDING') {
+      return response.forbidden({
+        message: 'Estabelecimento pendente de aprovação não pode validar cupons no caixa.',
+        code: 'E_ESTABLISHMENT_PENDING',
+      })
     }
 
     const payload = await request.validateUsing(consumeCouponValidator)
@@ -161,6 +189,22 @@ export default class EstablishmentCouponsController {
         return response.badRequest({
           message: 'Este cupom já foi utilizado.',
           code: 'E_COUPON_ALREADY_USED',
+        })
+      }
+
+      if (coupon.status === 'CANCELLED') {
+        await trx.rollback()
+        return response.badRequest({
+          message: 'Este cupom foi cancelado e não pode ser consumido.',
+          code: 'E_COUPON_CANCELLED',
+        })
+      }
+
+      if (coupon.status === 'EXPIRED') {
+        await trx.rollback()
+        return response.badRequest({
+          message: 'Este cupom está expirado e não pode ser consumido.',
+          code: 'E_COUPON_EXPIRED',
         })
       }
 

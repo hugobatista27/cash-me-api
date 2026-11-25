@@ -6,7 +6,10 @@ import UserCustomer from '#models/user_customer'
 test.group('Functional | Customer Auth & Profile', (group) => {
   group.each.setup(() => testUtils.db().truncate())
 
-  test('should register new customer account with profile and return access token', async ({ client, assert }) => {
+  test('should register new customer account with profile and return access token', async ({
+    client,
+    assert,
+  }) => {
     const response = await client.post('/api/v1/auth/customer/signup').json({
       fullName: 'Maria Silva',
       email: 'maria@gmail.com',
@@ -50,9 +53,7 @@ test.group('Functional | Customer Auth & Profile', (group) => {
       fullName: 'Carlos Santos',
     })
 
-    const response = await client
-      .get('/api/v1/account/customer/profile')
-      .loginAs(user)
+    const response = await client.get('/api/v1/account/customer/profile').loginAs(user)
 
     response.assertStatus(200)
     response.assertBodyContains({
@@ -75,13 +76,10 @@ test.group('Functional | Customer Auth & Profile', (group) => {
       fullName: 'Old Name',
     })
 
-    const response = await client
-      .put('/api/v1/account/customer/profile')
-      .loginAs(user)
-      .json({
-        fullName: 'New Name',
-        phone: '47988887777',
-      })
+    const response = await client.put('/api/v1/account/customer/profile').loginAs(user).json({
+      fullName: 'New Name',
+      phone: '47988887777',
+    })
 
     response.assertStatus(200)
     response.assertBodyContains({

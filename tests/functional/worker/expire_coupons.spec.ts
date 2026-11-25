@@ -97,12 +97,17 @@ test.group(
       })
 
       let emittedCount = 0
-      emitter.on('coupon:expired', () => {
+      const unsubscribe = emitter.on('coupon:expired', () => {
         emittedCount++
       })
 
       const service = new ExpireCouponsService()
-      const result = await service.execute(50)
+      let result: Awaited<ReturnType<ExpireCouponsService['execute']>>
+      try {
+        result = await service.execute(50)
+      } finally {
+        unsubscribe()
+      }
 
       assert.equal(result.processed, 2)
       assert.equal(result.expired, 2)

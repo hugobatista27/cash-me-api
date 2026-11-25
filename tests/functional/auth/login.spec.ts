@@ -5,7 +5,10 @@ import User from '#models/user'
 test.group('Functional | Auth Login', (group) => {
   group.each.setup(() => testUtils.db().truncate())
 
-  test('should login user with valid credentials and return access token', async ({ client, assert }) => {
+  test('should login user with valid credentials and return access token', async ({
+    client,
+    assert,
+  }) => {
     await User.create({
       email: 'user@example.com',
       password: 'password123',

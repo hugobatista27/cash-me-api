@@ -8,7 +8,18 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class AuthAccessTokenSchema extends BaseModel {
-  static $columns = ['abilities', 'createdAt', 'expiresAt', 'hash', 'id', 'lastUsedAt', 'name', 'tokenableId', 'type', 'updatedAt'] as const
+  static $columns = [
+    'abilities',
+    'createdAt',
+    'expiresAt',
+    'hash',
+    'id',
+    'lastUsedAt',
+    'name',
+    'tokenableId',
+    'type',
+    'updatedAt',
+  ] as const
   $columns = AuthAccessTokenSchema.$columns
   @column()
   declare abilities: string
@@ -33,7 +44,21 @@ export class AuthAccessTokenSchema extends BaseModel {
 }
 
 export class CouponRedemptionSchema extends BaseModel {
-  static $columns = ['cancelledAt', 'code', 'createdAt', 'customerId', 'establishmentId', 'expiresAt', 'id', 'pointsCost', 'rewardId', 'status', 'updatedAt', 'usedAt', 'usedByUserId'] as const
+  static $columns = [
+    'cancelledAt',
+    'code',
+    'createdAt',
+    'customerId',
+    'establishmentId',
+    'expiresAt',
+    'id',
+    'pointsCost',
+    'rewardId',
+    'status',
+    'updatedAt',
+    'usedAt',
+    'usedByUserId',
+  ] as const
   $columns = CouponRedemptionSchema.$columns
   @column.dateTime()
   declare cancelledAt: DateTime | null
@@ -64,7 +89,22 @@ export class CouponRedemptionSchema extends BaseModel {
 }
 
 export class EstablishmentAddressSchema extends BaseModel {
-  static $columns = ['city', 'complement', 'createdAt', 'establishmentId', 'id', 'latitude', 'longitude', 'neighborhood', 'number', 'postalCode', 'reference', 'state', 'street', 'updatedAt'] as const
+  static $columns = [
+    'city',
+    'complement',
+    'createdAt',
+    'establishmentId',
+    'id',
+    'latitude',
+    'longitude',
+    'neighborhood',
+    'number',
+    'postalCode',
+    'reference',
+    'state',
+    'street',
+    'updatedAt',
+  ] as const
   $columns = EstablishmentAddressSchema.$columns
   @column()
   declare city: string
@@ -97,7 +137,22 @@ export class EstablishmentAddressSchema extends BaseModel {
 }
 
 export class EstablishmentSchema extends BaseModel {
-  static $columns = ['cnpj', 'conversionFactor', 'createdAt', 'email', 'id', 'instagram', 'legalName', 'phone', 'socialLinks', 'status', 'tradeName', 'updatedAt', 'website', 'whatsapp'] as const
+  static $columns = [
+    'cnpj',
+    'conversionFactor',
+    'createdAt',
+    'email',
+    'id',
+    'instagram',
+    'legalName',
+    'phone',
+    'socialLinks',
+    'status',
+    'tradeName',
+    'updatedAt',
+    'website',
+    'whatsapp',
+  ] as const
   $columns = EstablishmentSchema.$columns
   @column()
   declare cnpj: string
@@ -130,7 +185,15 @@ export class EstablishmentSchema extends BaseModel {
 }
 
 export class InvoiceItemSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'invoiceId', 'quantity', 'rawDescription', 'totalPrice', 'unitPrice'] as const
+  static $columns = [
+    'createdAt',
+    'id',
+    'invoiceId',
+    'quantity',
+    'rawDescription',
+    'totalPrice',
+    'unitPrice',
+  ] as const
   $columns = InvoiceItemSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -149,7 +212,22 @@ export class InvoiceItemSchema extends BaseModel {
 }
 
 export class InvoiceSchema extends BaseModel {
-  static $columns = ['accessKey', 'createdAt', 'customerId', 'establishmentId', 'id', 'issuedAt', 'issuerCnpj', 'issuerState', 'pointsAwarded', 'qrCodeUrl', 'rejectionReason', 'status', 'totalAmount', 'updatedAt'] as const
+  static $columns = [
+    'accessKey',
+    'createdAt',
+    'customerId',
+    'establishmentId',
+    'id',
+    'issuedAt',
+    'issuerCnpj',
+    'issuerState',
+    'pointsAwarded',
+    'qrCodeUrl',
+    'rejectionReason',
+    'status',
+    'totalAmount',
+    'updatedAt',
+  ] as const
   $columns = InvoiceSchema.$columns
   @column()
   declare accessKey: string
@@ -182,7 +260,15 @@ export class InvoiceSchema extends BaseModel {
 }
 
 export class LoyaltyProgramSchema extends BaseModel {
-  static $columns = ['createdAt', 'establishmentId', 'id', 'name', 'pointsCurrency', 'status', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'establishmentId',
+    'id',
+    'name',
+    'pointsCurrency',
+    'status',
+    'updatedAt',
+  ] as const
   $columns = LoyaltyProgramSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -201,7 +287,15 @@ export class LoyaltyProgramSchema extends BaseModel {
 }
 
 export class PointBalanceSchema extends BaseModel {
-  static $columns = ['createdAt', 'currentBalance', 'customerId', 'establishmentId', 'id', 'totalAccumulated', 'updatedAt'] as const
+  static $columns = [
+    'createdAt',
+    'currentBalance',
+    'customerId',
+    'establishmentId',
+    'id',
+    'totalAccumulated',
+    'updatedAt',
+  ] as const
   $columns = PointBalanceSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -220,7 +314,21 @@ export class PointBalanceSchema extends BaseModel {
 }
 
 export class PointRuleSchema extends BaseModel {
-  static $columns = ['baseAmount', 'createdAt', 'createdBy', 'establishmentId', 'id', 'loyaltyProgramId', 'maxPointsPerPurchase', 'minPurchaseAmount', 'name', 'pointsPerBase', 'status', 'updatedAt', 'version'] as const
+  static $columns = [
+    'baseAmount',
+    'createdAt',
+    'createdBy',
+    'establishmentId',
+    'id',
+    'loyaltyProgramId',
+    'maxPointsPerPurchase',
+    'minPurchaseAmount',
+    'name',
+    'pointsPerBase',
+    'status',
+    'updatedAt',
+    'version',
+  ] as const
   $columns = PointRuleSchema.$columns
   @column()
   declare baseAmount: number
@@ -251,7 +359,22 @@ export class PointRuleSchema extends BaseModel {
 }
 
 export class PointTransactionSchema extends BaseModel {
-  static $columns = ['appliedConversionFactor', 'couponRedemptionId', 'createdAt', 'customerId', 'description', 'establishmentId', 'id', 'invoiceId', 'metadata', 'points', 'purchaseAmount', 'ruleId', 'ruleVersion', 'type'] as const
+  static $columns = [
+    'appliedConversionFactor',
+    'couponRedemptionId',
+    'createdAt',
+    'customerId',
+    'description',
+    'establishmentId',
+    'id',
+    'invoiceId',
+    'metadata',
+    'points',
+    'purchaseAmount',
+    'ruleId',
+    'ruleVersion',
+    'type',
+  ] as const
   $columns = PointTransactionSchema.$columns
   @column()
   declare appliedConversionFactor: number | null
@@ -284,7 +407,22 @@ export class PointTransactionSchema extends BaseModel {
 }
 
 export class RewardSchema extends BaseModel {
-  static $columns = ['createdAt', 'description', 'discountType', 'discountValue', 'establishmentId', 'id', 'maxDiscountAmount', 'minPurchaseAmount', 'pointsCost', 'status', 'stock', 'title', 'updatedAt', 'validityDays'] as const
+  static $columns = [
+    'createdAt',
+    'description',
+    'discountType',
+    'discountValue',
+    'establishmentId',
+    'id',
+    'maxDiscountAmount',
+    'minPurchaseAmount',
+    'pointsCost',
+    'status',
+    'stock',
+    'title',
+    'updatedAt',
+    'validityDays',
+  ] as const
   $columns = RewardSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -317,7 +455,19 @@ export class RewardSchema extends BaseModel {
 }
 
 export class UserCustomerSchema extends BaseModel {
-  static $columns = ['authProvider', 'cpf', 'createdAt', 'deviceToken', 'fullName', 'id', 'phone', 'socialId', 'termsAcceptedAt', 'updatedAt', 'userId'] as const
+  static $columns = [
+    'authProvider',
+    'cpf',
+    'createdAt',
+    'deviceToken',
+    'fullName',
+    'id',
+    'phone',
+    'socialId',
+    'termsAcceptedAt',
+    'updatedAt',
+    'userId',
+  ] as const
   $columns = UserCustomerSchema.$columns
   @column()
   declare authProvider: string
@@ -344,7 +494,15 @@ export class UserCustomerSchema extends BaseModel {
 }
 
 export class UserEstablishmentSchema extends BaseModel {
-  static $columns = ['createdAt', 'establishmentId', 'fullName', 'id', 'role', 'updatedAt', 'userId'] as const
+  static $columns = [
+    'createdAt',
+    'establishmentId',
+    'fullName',
+    'id',
+    'role',
+    'updatedAt',
+    'userId',
+  ] as const
   $columns = UserEstablishmentSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -363,7 +521,16 @@ export class UserEstablishmentSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['createdAt', 'email', 'id', 'lastLoginAt', 'password', 'status', 'updatedAt', 'userType'] as const
+  static $columns = [
+    'createdAt',
+    'email',
+    'id',
+    'lastLoginAt',
+    'password',
+    'status',
+    'updatedAt',
+    'userType',
+  ] as const
   $columns = UserSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

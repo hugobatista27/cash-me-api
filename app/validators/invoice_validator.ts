@@ -1,7 +1,10 @@
 import vine from '@vinejs/vine'
 
 export const processInvoiceValidator = vine.create({
-  accessKey: vine.string().trim().regex(/^\d{44}$/),
+  accessKey: vine
+    .string()
+    .trim()
+    .regex(/^\d{44}$/),
   qrCodeUrl: vine.string().trim(),
   issuerState: vine.string().trim().fixedLength(2),
   issuerCnpj: vine.string().trim().minLength(14).maxLength(18),

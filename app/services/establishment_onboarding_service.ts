@@ -148,7 +148,7 @@ export default class EstablishmentOnboardingService {
       const token = await User.accessTokens.create(user)
 
       if (address) {
-        establishment.address = address
+        establishment.$setRelated('address', address)
       }
 
       return {

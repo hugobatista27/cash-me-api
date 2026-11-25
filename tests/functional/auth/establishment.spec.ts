@@ -6,7 +6,10 @@ import UserEstablishment from '#models/user_establishment'
 test.group('Functional | Establishment Auth & Profile', (group) => {
   group.each.setup(() => testUtils.db().truncate())
 
-  test('should register new establishment user account with profile and return access token', async ({ client, assert }) => {
+  test('should register new establishment user account with profile and return access token', async ({
+    client,
+    assert,
+  }) => {
     const response = await client.post('/api/v1/auth/establishment/signup').json({
       fullName: 'Manager User',
       email: 'manager@store.com',
@@ -49,9 +52,7 @@ test.group('Functional | Establishment Auth & Profile', (group) => {
       role: 'LOJISTA_OPERADOR',
     })
 
-    const response = await client
-      .get('/api/v1/account/establishment/profile')
-      .loginAs(user)
+    const response = await client.get('/api/v1/account/establishment/profile').loginAs(user)
 
     response.assertStatus(200)
     response.assertBodyContains({
@@ -64,7 +65,10 @@ test.group('Functional | Establishment Auth & Profile', (group) => {
     })
   })
 
-  test('should update establishment user profile details', async ({ client, assert }) => {
+  test('should update establishment user profile details without allowing role self-escalation', async ({
+    client,
+    assert,
+  }) => {
     const user = await User.create({
       email: 'update@store.com',
       password: 'password123',
@@ -76,26 +80,23 @@ test.group('Functional | Establishment Auth & Profile', (group) => {
       role: 'LOJISTA_OPERADOR',
     })
 
-    const response = await client
-      .put('/api/v1/account/establishment/profile')
-      .loginAs(user)
-      .json({
-        fullName: 'Updated Name',
-        role: 'LOJISTA_ADMIN',
-      })
+    const response = await client.put('/api/v1/account/establishment/profile').loginAs(user).json({
+      fullName: 'Updated Name',
+      role: 'LOJISTA_ADMIN',
+    })
 
     response.assertStatus(200)
     response.assertBodyContains({
       data: {
         profile: {
           fullName: 'Updated Name',
-          role: 'LOJISTA_ADMIN',
+          role: 'LOJISTA_OPERADOR',
         },
       },
     })
 
     await profile.refresh()
     assert.equal(profile.fullName, 'Updated Name')
-    assert.equal(profile.role, 'LOJISTA_ADMIN')
+    assert.equal(profile.role, 'LOJISTA_OPERADOR')
   })
 })

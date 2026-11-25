@@ -109,7 +109,7 @@ export default defineConfig({
     init: [
       indexEntities({
         transformers: { enabled: true },
-      }),
+      }) as any,
       generateRegistry(),
     ],
   },

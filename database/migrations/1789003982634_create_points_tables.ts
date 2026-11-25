@@ -18,8 +18,8 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('establishments')
         .onDelete('CASCADE')
-      table.decimal('current_balance', 10, 2).notNullable().defaultTo(0.00)
-      table.decimal('total_accumulated', 10, 2).notNullable().defaultTo(0.00)
+      table.decimal('current_balance', 10, 2).notNullable().defaultTo(0.0)
+      table.decimal('total_accumulated', 10, 2).notNullable().defaultTo(0.0)
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

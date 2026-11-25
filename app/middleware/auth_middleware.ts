@@ -15,6 +15,9 @@ export default class AuthMiddleware {
     } = {}
   ) {
     await ctx.auth.authenticateUsing(options.guards)
+    if (ctx.auth.user && ctx.auth.user.status !== 'ACTIVE') {
+      return ctx.response.forbidden({ message: 'Conta inativa ou bloqueada.' })
+    }
     return next()
   }
 }

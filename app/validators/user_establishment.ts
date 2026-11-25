@@ -8,11 +8,9 @@ export const signupEstablishmentValidator = vine.create({
   email: email().unique({ table: 'users', column: 'email' }),
   password: password(),
   passwordConfirmation: password().sameAs('password'),
-  establishmentId: vine.number().nullable().optional(),
-  role: vine.enum(['SUPER_ADMIN', 'LOJISTA_ADMIN', 'LOJISTA_OPERADOR']).optional(),
+  role: vine.enum(['LOJISTA_ADMIN', 'LOJISTA_OPERADOR']).optional(),
 })
 
 export const updateEstablishmentValidator = vine.create({
   fullName: vine.string().trim().minLength(2).maxLength(255).optional(),
-  role: vine.enum(['SUPER_ADMIN', 'LOJISTA_ADMIN', 'LOJISTA_OPERADOR']).optional(),
 })

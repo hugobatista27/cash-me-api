@@ -9,3 +9,9 @@ export default class CouponExpiredEvent extends BaseEvent {
     super()
   }
 }
+
+declare module '@adonisjs/core/types' {
+  interface EventsList {
+    'coupon:expired': CouponExpiredEvent
+  }
+}

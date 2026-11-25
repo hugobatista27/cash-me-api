@@ -338,7 +338,9 @@ test.group('Functional | Customer Coupons & Atomic Redemption (TASK-11 & ADR-003
     })
 
     // Resgate
-    const redeemRes = await client.post(`/api/v1/customer/rewards/${reward.id}/redeem`).loginAs(user)
+    const redeemRes = await client
+      .post(`/api/v1/customer/rewards/${reward.id}/redeem`)
+      .loginAs(user)
     redeemRes.assertStatus(201)
     const coupon = redeemRes.body()
 

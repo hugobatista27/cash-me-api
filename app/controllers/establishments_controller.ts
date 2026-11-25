@@ -13,12 +13,33 @@ import db from '@adonisjs/lucid/services/db'
 
 export default class EstablishmentsController {
   /**
+   * Garante isolamento multi-tenant para alteração de estabelecimento:
+   * apenas SUPER_ADMIN ou LOJISTA_ADMIN vinculado ao próprio estabelecimento.
+   */
+  private async canManageEstablishment(
+    ctx: HttpContext,
+    establishmentId: number
+  ): Promise<boolean> {
+    const user = ctx.auth.getUserOrFail()
+    if (user.userType === 'SUPER_ADMIN') {
+      return true
+    }
+
+    await user.load((loader) => loader.load('establishmentProfile'))
+    return (
+      user.establishmentProfile?.role === 'LOJISTA_ADMIN' &&
+      user.establishmentProfile?.establishmentId === establishmentId
+    )
+  }
+
+  /**
    * @index
    * @summary Listar estabelecimentos parceiros
    * @responseBody 200 - [{"id": 1, "cnpj": "12345678000195", "tradeName": "Padaria Real", "status": "ACTIVE"}]
    */
   async index({ serialize }: HttpContext) {
     const establishments = await Establishment.query()
+      .where('status', 'ACTIVE')
       .preload('address')
       .orderBy('tradeName', 'asc')
     return serialize(EstablishmentTransformer.transform(establishments))
@@ -89,7 +110,7 @@ export default class EstablishmentsController {
           },
           { client: trx }
         )
-        establishment.address = address
+        establishment.$setRelated('address', address)
       }
 
       await trx.commit()
@@ -108,7 +129,8 @@ export default class EstablishmentsController {
    * @requestBody {"tradeName": "Padaria Real Nova", "status": "ACTIVE", "conversionFactor": 2.0}
    * @responseBody 200 - {"id": 1, "status": "ACTIVE"}
    */
-  async update({ params, request, serialize, response }: HttpContext) {
+  async update(ctx: HttpContext) {
+    const { params, request, serialize, response } = ctx
     const establishment = await Establishment.query()
       .where('id', params.id)
       .preload('address')
@@ -116,6 +138,12 @@ export default class EstablishmentsController {
 
     if (!establishment) {
       return response.notFound({ message: 'Estabelecimento não encontrado.' })
+    }
+
+    if (!(await this.canManageEstablishment(ctx, establishment.id))) {
+      return response.forbidden({
+        message: 'Acesso negado. Você não tem permissão para gerenciar este estabelecimento.',
+      })
     }
 
     const payload = await request.validateUsing(updateEstablishmentValidator)
@@ -134,12 +162,13 @@ export default class EstablishmentsController {
         })
         await establishment.address.save()
       } else {
-        establishment.address = await EstablishmentAddress.create({
+        const createdAddress = await EstablishmentAddress.create({
           ...addressPayload,
           establishmentId: establishment.id,
           postalCode: cleanCep,
           state: addressPayload.state.toUpperCase(),
         })
+        establishment.$setRelated('address', createdAddress)
       }
     }
 
@@ -188,10 +217,17 @@ export default class EstablishmentsController {
    * @requestBody {"city": "Florianópolis", "state": "SC"}
    * @responseBody 200 - {"id": 1, "city": "Florianópolis"}
    */
-  async updateAddress({ params, request, serialize, response }: HttpContext) {
+  async updateAddress(ctx: HttpContext) {
+    const { params, request, serialize, response } = ctx
     const establishment = await Establishment.find(params.id)
     if (!establishment) {
       return response.notFound({ message: 'Estabelecimento não encontrado.' })
+    }
+
+    if (!(await this.canManageEstablishment(ctx, establishment.id))) {
+      return response.forbidden({
+        message: 'Acesso negado. Você não tem permissão para gerenciar este estabelecimento.',
+      })
     }
 
     let address = await EstablishmentAddress.findBy('establishmentId', params.id)
@@ -208,8 +244,17 @@ export default class EstablishmentsController {
       address.merge(payload)
       await address.save()
     } else {
-      if (!payload.postalCode || !payload.state || !payload.city || !payload.neighborhood || !payload.street || !payload.number) {
-        return response.badRequest({ message: 'Campos obrigatórios de endereço ausentes para criação.' })
+      if (
+        !payload.postalCode ||
+        !payload.state ||
+        !payload.city ||
+        !payload.neighborhood ||
+        !payload.street ||
+        !payload.number
+      ) {
+        return response.badRequest({
+          message: 'Campos obrigatórios de endereço ausentes para criação.',
+        })
       }
       address = await EstablishmentAddress.create({
         establishmentId: establishment.id,

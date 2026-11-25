@@ -170,7 +170,10 @@ test.group('Functional | Establishment Onboarding & Management', (group) => {
     response.assertStatus(422)
   })
 
-  test('should allow SUPER_ADMIN to approve a pending establishment (RN06)', async ({ client, assert }) => {
+  test('should allow SUPER_ADMIN to approve a pending establishment (RN06)', async ({
+    client,
+    assert,
+  }) => {
     // 1. Cria usuário Super Admin
     const superAdminUser = await User.create({
       email: 'admin@cashme.com',
@@ -232,7 +235,10 @@ test.group('Functional | Establishment Onboarding & Management', (group) => {
     assert.equal(establishment.status, 'ACTIVE')
   })
 
-  test('should fetch and update establishment address directly', async ({ client, assert }) => {
+  test('should fetch and update establishment address only by authorized owner or SUPER_ADMIN', async ({
+    client,
+    assert,
+  }) => {
     const establishment = await Establishment.create({
       cnpj: '33333333000133',
       legalName: 'Loja Local Ltda',
@@ -241,15 +247,68 @@ test.group('Functional | Establishment Onboarding & Management', (group) => {
       conversionFactor: 1.0,
     })
 
-    // Criação inicial do endereço via PUT
-    const updateResponse = await client.put(`/api/v1/establishments/${establishment.id}/address`).json({
-      postalCode: '88015-100',
-      state: 'SC',
-      city: 'Florianópolis',
-      neighborhood: 'Agronômica',
-      street: 'Rua Beira Mar Norte',
-      number: '1000',
+    const ownerUser = await User.create({
+      email: 'owner.local@store.com',
+      password: 'Password@123',
+      userType: 'ESTABLISHMENT',
+      status: 'ACTIVE',
     })
+    await UserEstablishment.create({
+      userId: ownerUser.id,
+      establishmentId: establishment.id,
+      fullName: 'Dono Local',
+      role: 'LOJISTA_ADMIN',
+    })
+
+    const otherEstablishment = await Establishment.create({
+      cnpj: '44444444000144',
+      legalName: 'Outra Loja Ltda',
+      tradeName: 'Outra Loja',
+      status: 'ACTIVE',
+      conversionFactor: 1.0,
+    })
+    const otherOwner = await User.create({
+      email: 'other.owner@store.com',
+      password: 'Password@123',
+      userType: 'ESTABLISHMENT',
+      status: 'ACTIVE',
+    })
+    await UserEstablishment.create({
+      userId: otherOwner.id,
+      establishmentId: otherEstablishment.id,
+      fullName: 'Outro Dono',
+      role: 'LOJISTA_ADMIN',
+    })
+
+    // Tentativa anônima -> 401
+    const unauthResponse = await client
+      .put(`/api/v1/establishments/${establishment.id}/address`)
+      .json({
+        number: '999',
+      })
+    unauthResponse.assertStatus(401)
+
+    // Tentativa de outro estabelecimento -> 403
+    const crossTenantResponse = await client
+      .put(`/api/v1/establishments/${establishment.id}/address`)
+      .loginAs(otherOwner)
+      .json({
+        number: '999',
+      })
+    crossTenantResponse.assertStatus(403)
+
+    // Criação inicial do endereço via PUT autenticado pelo dono
+    const updateResponse = await client
+      .put(`/api/v1/establishments/${establishment.id}/address`)
+      .loginAs(ownerUser)
+      .json({
+        postalCode: '88015-100',
+        state: 'SC',
+        city: 'Florianópolis',
+        neighborhood: 'Agronômica',
+        street: 'Rua Beira Mar Norte',
+        number: '1000',
+      })
 
     updateResponse.assertStatus(200)
     updateResponse.assertBodyContains({
@@ -271,11 +330,14 @@ test.group('Functional | Establishment Onboarding & Management', (group) => {
       },
     })
 
-    // Atualização parcial de endereço
-    const patchResponse = await client.put(`/api/v1/establishments/${establishment.id}/address`).json({
-      number: '2000',
-      complement: 'Bloco B',
-    })
+    // Atualização parcial de endereço pelo dono
+    const patchResponse = await client
+      .put(`/api/v1/establishments/${establishment.id}/address`)
+      .loginAs(ownerUser)
+      .json({
+        number: '2000',
+        complement: 'Bloco B',
+      })
 
     patchResponse.assertStatus(200)
     patchResponse.assertBodyContains({

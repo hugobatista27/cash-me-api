@@ -8,9 +8,14 @@ export const signupCustomerValidator = vine.create({
   email: email().unique({ table: 'users', column: 'email' }),
   password: password(),
   passwordConfirmation: password().sameAs('password'),
-  cpf: vine.string().fixedLength(11).unique({ table: 'user_customers', column: 'cpf' }).nullable().optional(),
+  cpf: vine
+    .string()
+    .fixedLength(11)
+    .unique({ table: 'user_customers', column: 'cpf' })
+    .nullable()
+    .optional(),
   phone: vine.string().maxLength(20).nullable().optional(),
-  termsAccepted: vine.boolean(),
+  termsAccepted: vine.literal(true),
   deviceToken: vine.string().maxLength(255).nullable().optional(),
 })
 

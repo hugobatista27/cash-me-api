@@ -8,6 +8,7 @@
 */
 
 import { middleware } from '#start/kernel'
+import app from '@adonisjs/core/services/app'
 import router from '@adonisjs/core/services/router'
 import { controllers } from '#generated/controllers'
 
@@ -18,15 +19,17 @@ router.get('/', () => {
   return { hello: 'world' }
 })
 
-// Retorna a especificação OpenAPI (JSON)
-router.get('/swagger', async () => {
-  return AutoSwagger.default.docs(router.toJSON(), swagger)
-})
+if (!app.inProduction) {
+  // Retorna a especificação OpenAPI (JSON)
+  router.get('/swagger', async () => {
+    return AutoSwagger.default.docs(router.toJSON(), swagger)
+  })
 
-// Interface gráfica do Swagger UI
-router.get('/docs', async () => {
-  return AutoSwagger.default.ui('/swagger', swagger)
-})
+  // Interface gráfica do Swagger UI
+  router.get('/docs', async () => {
+    return AutoSwagger.default.ui('/swagger', swagger)
+  })
+}
 
 const CustomerInvoicesController = () => import('#controllers/customer_invoices_controller')
 const CustomerPointsController = () => import('#controllers/customer_points_controller')
@@ -38,6 +41,8 @@ const EstablishmentCouponsController = () => import('#controllers/establishment_
 
 router
   .group(() => {
+    router.get('health', () => ({ status: 'ok' }))
+
     router
       .group(() => {
         router.post('signup', [controllers.NewAccount, 'store'])
@@ -128,10 +133,16 @@ router
       .group(() => {
         router.get('/', [EstablishmentsController, 'index'])
         router.get('/:id', [EstablishmentsController, 'show'])
-        router.post('/', [EstablishmentsController, 'store'])
-        router.put('/:id', [EstablishmentsController, 'update'])
+        router
+          .post('/', [EstablishmentsController, 'store'])
+          .use([middleware.auth(), middleware.role(['SUPER_ADMIN'])])
+        router
+          .put('/:id', [EstablishmentsController, 'update'])
+          .use([middleware.auth(), middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN'])])
         router.get('/:id/address', [EstablishmentsController, 'showAddress'])
-        router.put('/:id/address', [EstablishmentsController, 'updateAddress'])
+        router
+          .put('/:id/address', [EstablishmentsController, 'updateAddress'])
+          .use([middleware.auth(), middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN'])])
         router
           .patch('/:id/approve', [EstablishmentsController, 'approve'])
           .as('approve')

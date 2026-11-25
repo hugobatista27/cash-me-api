@@ -97,8 +97,8 @@ export default class CustomerCouponsController {
       return response.notFound({ message: 'Recompensa não encontrada.' })
     }
 
-    // RN11: Rejeitar com erro 400 se o estabelecimento estiver com status = 'INACTIVE'
-    if (!reward.establishment || reward.establishment.status === 'INACTIVE') {
+    // RN06/RN11: Rejeitar com erro 400 se o estabelecimento não estiver ativo (INACTIVE ou PENDING)
+    if (!reward.establishment || reward.establishment.status !== 'ACTIVE') {
       return response.badRequest({
         message: 'O estabelecimento encontra-se inativo e não aceita resgates no momento.',
         code: 'E_ESTABLISHMENT_INACTIVE',
@@ -116,15 +116,46 @@ export default class CustomerCouponsController {
     const trx = await db.transaction()
 
     try {
-      // 1. SELECT FOR UPDATE em point_balances do consumidor no estabelecimento
+      // 1. Lock na recompensa primeiro (ordem determinística) e revalidação pós-lock (anti-TOCTOU)
+      const lockedReward = await Reward.query({ client: trx })
+        .where('id', reward.id)
+        .preload('establishment')
+        .forUpdate()
+        .firstOrFail()
+
+      if (!lockedReward.establishment || lockedReward.establishment.status !== 'ACTIVE') {
+        await trx.rollback()
+        return response.badRequest({
+          message: 'O estabelecimento encontra-se inativo e não aceita resgates no momento.',
+          code: 'E_ESTABLISHMENT_INACTIVE',
+        })
+      }
+
+      if (lockedReward.status !== 'ACTIVE') {
+        await trx.rollback()
+        return response.badRequest({
+          message: 'Esta recompensa não está mais ativa.',
+          code: 'E_REWARD_INACTIVE',
+        })
+      }
+
+      if (lockedReward.stock !== null && lockedReward.stock <= 0) {
+        await trx.rollback()
+        return response.badRequest({
+          message: 'Estoque esgotado para esta recompensa.',
+          code: 'E_REWARD_OUT_OF_STOCK',
+        })
+      }
+
+      // 2. SELECT FOR UPDATE em point_balances do consumidor no estabelecimento
       const balance = await PointBalance.query({ client: trx })
         .where('customerId', customer.id)
-        .where('establishmentId', reward.establishmentId)
+        .where('establishmentId', lockedReward.establishmentId)
         .forUpdate()
         .first()
 
       const currentBalance = balance ? Number(balance.currentBalance) : 0
-      const pointsCost = Number(reward.pointsCost)
+      const pointsCost = Number(lockedReward.pointsCost)
 
       // Rejeitar se saldo insuficiente
       if (!balance || currentBalance < pointsCost) {
@@ -134,20 +165,6 @@ export default class CustomerCouponsController {
           code: 'E_INSUFFICIENT_POINTS',
           currentBalance,
           pointsCost,
-        })
-      }
-
-      // 2. Lock e verificação de estoque na recompensa
-      const lockedReward = await Reward.query({ client: trx })
-        .where('id', reward.id)
-        .forUpdate()
-        .firstOrFail()
-
-      if (lockedReward.stock !== null && lockedReward.stock <= 0) {
-        await trx.rollback()
-        return response.badRequest({
-          message: 'Estoque esgotado para esta recompensa.',
-          code: 'E_REWARD_OUT_OF_STOCK',
         })
       }
 
@@ -165,16 +182,16 @@ export default class CustomerCouponsController {
       // 3. Gerar código alfanumérico curto único
       const code = await this.generateUniqueCode(trx)
 
-      // 4. Calcular expires_at com base na validade
-      const validityDays = reward.validityDays > 0 ? reward.validityDays : 30
+      // 4. Calcular expires_at com base na validade do registro travado
+      const validityDays = lockedReward.validityDays > 0 ? lockedReward.validityDays : 30
       const expiresAt = DateTime.now().plus({ days: validityDays })
 
       // 5. Persistir CouponRedemption com status ACTIVE
       const coupon = await CouponRedemption.create(
         {
           customerId: user.id,
-          establishmentId: reward.establishmentId,
-          rewardId: reward.id,
+          establishmentId: lockedReward.establishmentId,
+          rewardId: lockedReward.id,
           code,
           pointsCost,
           status: 'ACTIVE',
@@ -187,15 +204,15 @@ export default class CustomerCouponsController {
       await PointTransaction.create(
         {
           customerId: customer.id,
-          establishmentId: reward.establishmentId,
+          establishmentId: lockedReward.establishmentId,
           couponRedemptionId: coupon.id,
           type: 'DEBIT',
           points: pointsCost,
-          description: `Resgate de cupom: ${reward.title}`,
+          description: `Resgate de cupom: ${lockedReward.title}`,
           metadata: {
             couponId: coupon.id,
             couponCode: coupon.code,
-            rewardId: reward.id,
+            rewardId: lockedReward.id,
             balanceAfter,
           },
         },
@@ -253,6 +270,14 @@ export default class CustomerCouponsController {
         })
       }
 
+      if (coupon.expiresAt < DateTime.now()) {
+        await trx.rollback()
+        return response.badRequest({
+          message: 'Este cupom já está expirado e não pode ser cancelado manualmente.',
+          code: 'E_COUPON_EXPIRED',
+        })
+      }
+
       // Transicionar para CANCELLED
       coupon.status = 'CANCELLED'
       coupon.cancelledAt = DateTime.now()
@@ -278,7 +303,7 @@ export default class CustomerCouponsController {
             customerId: customer.id,
             establishmentId: coupon.establishmentId,
             currentBalance: refundPoints,
-            totalAccumulated: refundPoints,
+            totalAccumulated: 0,
           },
           { client: trx }
         )

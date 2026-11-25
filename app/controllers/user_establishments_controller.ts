@@ -1,6 +1,10 @@
 import User from '#models/user'
 import UserEstablishment from '#models/user_establishment'
-import { signupEstablishmentValidator, updateEstablishmentValidator } from '#validators/user_establishment'
+import db from '@adonisjs/lucid/services/db'
+import {
+  signupEstablishmentValidator,
+  updateEstablishmentValidator,
+} from '#validators/user_establishment'
 import { onboardingEstablishmentValidator } from '#validators/establishment_validator'
 import type { HttpContext } from '@adonisjs/core/http'
 import UserTransformer from '#transformers/user_transformer'
@@ -55,18 +59,28 @@ export default class UserEstablishmentsController {
 
     const payload = await request.validateUsing(signupEstablishmentValidator)
 
-    const user = await User.create({
-      email: payload.email,
-      password: payload.password,
-      userType: 'ESTABLISHMENT',
-      status: 'ACTIVE',
-    })
+    const { user, establishmentProfile } = await db.transaction(async (trx) => {
+      const createdUser = await User.create(
+        {
+          email: payload.email,
+          password: payload.password,
+          userType: 'ESTABLISHMENT',
+          status: 'ACTIVE',
+        },
+        { client: trx }
+      )
 
-    const establishmentProfile = await UserEstablishment.create({
-      userId: user.id,
-      fullName: payload.fullName,
-      establishmentId: payload.establishmentId,
-      role: payload.role || 'LOJISTA_ADMIN',
+      const createdProfile = await UserEstablishment.create(
+        {
+          userId: createdUser.id,
+          fullName: payload.fullName,
+          establishmentId: null,
+          role: payload.role || 'LOJISTA_ADMIN',
+        },
+        { client: trx }
+      )
+
+      return { user: createdUser, establishmentProfile: createdProfile }
     })
 
     const token = await User.accessTokens.create(user)
@@ -85,7 +99,7 @@ export default class UserEstablishmentsController {
    */
   async show({ auth, serialize, response }: HttpContext) {
     const user = auth.getUserOrFail()
-    await user.load('establishmentProfile')
+    await user.load((loader) => loader.load('establishmentProfile'))
 
     if (!user.establishmentProfile) {
       return response.notFound({ message: 'Establishment profile not found' })
@@ -111,14 +125,16 @@ export default class UserEstablishmentsController {
    */
   async update({ auth, request, serialize, response }: HttpContext) {
     const user = auth.getUserOrFail()
-    await user.load('establishmentProfile')
+    await user.load((loader) => loader.load('establishmentProfile'))
 
     if (!user.establishmentProfile) {
       return response.notFound({ message: 'Establishment profile not found' })
     }
 
     const payload = await request.validateUsing(updateEstablishmentValidator)
-    user.establishmentProfile.merge(payload)
+    if (payload.fullName !== undefined) {
+      user.establishmentProfile.fullName = payload.fullName
+    }
     await user.establishmentProfile.save()
 
     return serialize({

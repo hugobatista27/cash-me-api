@@ -24,7 +24,7 @@ export default class extends BaseSchema {
       table.string('issuer_cnpj', 14).notNullable()
       table.timestamp('issued_at').notNullable()
       table.decimal('total_amount', 10, 2).notNullable()
-      table.decimal('points_awarded', 10, 2).notNullable().defaultTo(0.00)
+      table.decimal('points_awarded', 10, 2).notNullable().defaultTo(0.0)
       table.string('status', 30).notNullable().defaultTo('PENDING')
       table.text('rejection_reason').nullable()
 

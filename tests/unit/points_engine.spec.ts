@@ -72,7 +72,10 @@ test.group('Unit | Points Engine Service', (group) => {
     assert.isNull(result.rejectionReason)
 
     // Verifica invoice no banco
-    const invoice = await Invoice.findBy('accessKey', '42230912345678000195650010000001231000001234')
+    const invoice = await Invoice.findBy(
+      'accessKey',
+      '42230912345678000195650010000001231000001234'
+    )
     assert.isNotNull(invoice)
     assert.equal(invoice!.status, 'PROCESSED')
     assert.equal(Number(invoice!.pointsAwarded), 154)
@@ -191,7 +194,9 @@ test.group('Unit | Points Engine Service', (group) => {
     assert.equal(result.rejectionReason, 'ESTABLISHMENT_NOT_FOUND')
   })
 
-  test('should reject invoice if establishment is inactive and keep previous balance (RN05)', async ({ assert }) => {
+  test('should reject invoice if establishment is inactive and keep previous balance (RN05)', async ({
+    assert,
+  }) => {
     const service = new PointsEngineService()
 
     const establishment = await Establishment.create({
@@ -241,7 +246,9 @@ test.group('Unit | Points Engine Service', (group) => {
     assert.equal(Number(balance!.totalAccumulated), 50)
   })
 
-  test('should throw DuplicateInvoiceException on duplicate accessKey (RN02)', async ({ assert }) => {
+  test('should throw DuplicateInvoiceException on duplicate accessKey (RN02)', async ({
+    assert,
+  }) => {
     const service = new PointsEngineService()
 
     await Establishment.create({
@@ -273,9 +280,6 @@ test.group('Unit | Points Engine Service', (group) => {
 
     await service.processInvoice(customer, payload)
 
-    await assert.rejects(
-      () => service.processInvoice(customer, payload),
-      DuplicateInvoiceException
-    )
+    await assert.rejects(() => service.processInvoice(customer, payload), DuplicateInvoiceException)
   })
 })

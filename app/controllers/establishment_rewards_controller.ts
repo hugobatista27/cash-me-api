@@ -60,6 +60,17 @@ export default class EstablishmentRewardsController {
 
     const payload = await request.validateUsing(createRewardValidator)
 
+    if (payload.discountType === 'PERCENTAGE' && payload.discountValue > 100) {
+      return response.unprocessableEntity({
+        errors: [
+          {
+            field: 'discountValue',
+            message: 'O desconto percentual não pode ser superior a 100%.',
+          },
+        ],
+      })
+    }
+
     const reward = await Reward.create({
       establishmentId: establishment.id,
       title: payload.title,
@@ -125,8 +136,21 @@ export default class EstablishmentRewardsController {
     const payload = await request.validateUsing(updateRewardValidator)
 
     const effectiveDiscountType = payload.discountType ?? reward.discountType
+    const effectiveDiscountValue =
+      payload.discountValue !== undefined ? payload.discountValue : Number(reward.discountValue)
     const effectiveMaxDiscount =
       payload.maxDiscountAmount !== undefined ? payload.maxDiscountAmount : reward.maxDiscountAmount
+
+    if (effectiveDiscountType === 'PERCENTAGE' && effectiveDiscountValue > 100) {
+      return response.unprocessableEntity({
+        errors: [
+          {
+            field: 'discountValue',
+            message: 'O desconto percentual não pode ser superior a 100%.',
+          },
+        ],
+      })
+    }
 
     if (effectiveDiscountType === 'PERCENTAGE' && !effectiveMaxDiscount) {
       return response.badRequest({

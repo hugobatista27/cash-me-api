@@ -20,9 +20,9 @@ export const createRewardValidator = vine.create({
     .nullable()
     .optional()
     .requiredWhen('discountType', '=', 'PERCENTAGE'),
-  pointsCost: vine.number().min(1),
-  stock: vine.number().min(0).nullable().optional(),
-  validityDays: vine.number().min(1).optional(),
+  pointsCost: vine.number().min(1).withoutDecimals(),
+  stock: vine.number().min(0).withoutDecimals().nullable().optional(),
+  validityDays: vine.number().min(1).withoutDecimals().optional(),
   status: vine.enum(['ACTIVE', 'INACTIVE', 'ARCHIVED'] as const).optional(),
 })
 
@@ -35,14 +35,9 @@ export const updateRewardValidator = vine.create({
   discountType: vine.enum(['FIXED', 'FIXED_AMOUNT', 'PERCENTAGE'] as const).optional(),
   discountValue: vine.number().positive().optional(),
   minPurchaseAmount: vine.number().min(0).nullable().optional(),
-  maxDiscountAmount: vine
-    .number()
-    .positive()
-    .nullable()
-    .optional()
-    .requiredWhen('discountType', '=', 'PERCENTAGE'),
-  pointsCost: vine.number().min(1).optional(),
-  stock: vine.number().min(0).nullable().optional(),
-  validityDays: vine.number().min(1).optional(),
+  maxDiscountAmount: vine.number().positive().nullable().optional(),
+  pointsCost: vine.number().min(1).withoutDecimals().optional(),
+  stock: vine.number().min(0).withoutDecimals().nullable().optional(),
+  validityDays: vine.number().min(1).withoutDecimals().optional(),
   status: vine.enum(['ACTIVE', 'INACTIVE', 'ARCHIVED'] as const).optional(),
 })

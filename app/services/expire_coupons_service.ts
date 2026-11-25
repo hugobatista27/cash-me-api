@@ -24,12 +24,13 @@ export default class ExpireCouponsService {
    */
   async execute(batchSize: number = 100): Promise<ExpireResult> {
     const now = DateTime.now()
+    const safeBatch = Math.max(1, Math.min(Math.floor(Number(batchSize) || 100), 1000))
 
     // Consulta otimizada em lote utilizando o índice (status, expires_at)
     const expiredCoupons = await CouponRedemption.query()
       .where('status', 'ACTIVE')
       .where('expiresAt', '<', now.toSQL()!)
-      .limit(batchSize)
+      .limit(safeBatch)
 
     const result: ExpireResult = {
       processed: expiredCoupons.length,
@@ -93,7 +94,11 @@ export default class ExpireCouponsService {
         .where('userId', coupon.customerId)
         .first()
 
-      const customerId = customer ? customer.id : coupon.customerId
+      if (!customer) {
+        throw new Error('Perfil de consumidor não encontrado para o cupom.')
+      }
+
+      const customerId = customer.id
 
       // 4. Lock pessimista (SELECT FOR UPDATE) no registro de saldo (point_balances)
       const balance = await PointBalance.query({ client: trx })
@@ -115,7 +120,7 @@ export default class ExpireCouponsService {
             customerId,
             establishmentId: coupon.establishmentId,
             currentBalance: refundPoints,
-            totalAccumulated: refundPoints,
+            totalAccumulated: 0,
           },
           { client: trx }
         )

@@ -46,9 +46,9 @@ export default class extends BaseSchema {
       table.integer('version').notNullable().defaultTo(1)
       table.string('name', 255).notNullable()
       table.string('status', 20).notNullable().defaultTo('ACTIVE')
-      table.decimal('base_amount', 10, 2).notNullable().defaultTo(1.00)
+      table.decimal('base_amount', 10, 2).notNullable().defaultTo(1.0)
       table.integer('points_per_base').notNullable().defaultTo(1)
-      table.decimal('min_purchase_amount', 10, 2).notNullable().defaultTo(0.00)
+      table.decimal('min_purchase_amount', 10, 2).notNullable().defaultTo(0.0)
       table.integer('max_points_per_purchase').nullable()
 
       table.timestamp('created_at').notNullable()

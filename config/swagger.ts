@@ -1,5 +1,6 @@
 import path from 'node:path'
 import url from 'node:url'
+import app from '@adonisjs/core/services/app'
 
 export default {
   path: path.dirname(url.fileURLToPath(import.meta.url)) + '/../',
@@ -10,7 +11,7 @@ export default {
   ignore: ['/swagger', '/docs', '/'],
   preferredPutPatch: 'PUT',
   snakeCase: true,
-  debug: true,
+  debug: app.inDev,
   common: {
     parameters: {},
     headers: {},

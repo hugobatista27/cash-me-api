@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import db from '@adonisjs/lucid/services/db'
 import Establishment from '#models/establishment'
 import LoyaltyProgram from '#models/loyalty_program'
 import PointRule from '#models/point_rule'
@@ -96,46 +97,60 @@ export default class EstablishmentRulesController {
 
     const payload = await request.validateUsing(updateLoyaltyRuleValidator)
 
-    let program = await LoyaltyProgram.findBy('establishmentId', establishment.id)
-    if (!program) {
-      program = await LoyaltyProgram.create({
-        establishmentId: establishment.id,
-        name: 'Programa de Fidelidade',
-        status: 'ACTIVE',
-        pointsCurrency: 'pontos',
-      })
-    }
+    const newRule = await db.transaction(async (trx) => {
+      let program = await LoyaltyProgram.query({ client: trx })
+        .where('establishmentId', establishment.id)
+        .forUpdate()
+        .first()
 
-    const lastRule = await PointRule.query()
-      .where('loyaltyProgramId', program.id)
-      .orderBy('version', 'desc')
-      .first()
+      if (!program) {
+        program = await LoyaltyProgram.create(
+          {
+            establishmentId: establishment.id,
+            name: 'Programa de Fidelidade',
+            status: 'ACTIVE',
+            pointsCurrency: 'pontos',
+          },
+          { client: trx }
+        )
+      }
 
-    const nextVersion = lastRule ? lastRule.version + 1 : 1
+      const lastRule = await PointRule.query({ client: trx })
+        .where('loyaltyProgramId', program.id)
+        .orderBy('version', 'desc')
+        .first()
 
-    // Inativa a regra anterior
-    await PointRule.query()
-      .where('loyaltyProgramId', program.id)
-      .where('status', 'ACTIVE')
-      .update({ status: 'INACTIVE' })
+      const nextVersion = lastRule ? lastRule.version + 1 : 1
 
-    // Cria a nova versão imutável da regra
-    const newRule = await PointRule.create({
-      loyaltyProgramId: program.id,
-      establishmentId: establishment.id,
-      createdBy: user.id,
-      version: nextVersion,
-      name: payload.name || `Regra de Fidelidade v${nextVersion}`,
-      status: 'ACTIVE',
-      baseAmount: payload.baseAmount,
-      pointsPerBase: payload.pointsPerBase,
-      minPurchaseAmount: payload.minPurchaseAmount ?? 0.0,
-      maxPointsPerPurchase: payload.maxPointsPerPurchase ?? null,
+      // Inativa a regra anterior
+      await PointRule.query({ client: trx })
+        .where('loyaltyProgramId', program.id)
+        .where('status', 'ACTIVE')
+        .update({ status: 'INACTIVE' })
+
+      // Cria a nova versão imutável da regra
+      const createdRule = await PointRule.create(
+        {
+          loyaltyProgramId: program.id,
+          establishmentId: establishment.id,
+          createdBy: user.id,
+          version: nextVersion,
+          name: payload.name || `Regra de Fidelidade v${nextVersion}`,
+          status: 'ACTIVE',
+          baseAmount: payload.baseAmount,
+          pointsPerBase: payload.pointsPerBase,
+          minPurchaseAmount: payload.minPurchaseAmount ?? 0.0,
+          maxPointsPerPurchase: payload.maxPointsPerPurchase ?? null,
+        },
+        { client: trx }
+      )
+
+      // Mantém espelho retroativo em establishments.conversion_factor
+      establishment.conversionFactor = payload.pointsPerBase / payload.baseAmount
+      await establishment.useTransaction(trx).save()
+
+      return createdRule
     })
-
-    // Mantém espelho retroativo em establishments.conversion_factor
-    establishment.conversionFactor = payload.pointsPerBase / payload.baseAmount
-    await establishment.save()
 
     return serialize(PointRuleTransformer.transform(newRule))
   }

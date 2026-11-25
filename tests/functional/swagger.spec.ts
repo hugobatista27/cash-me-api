@@ -9,7 +9,10 @@ test.group('Functional | Swagger Documentation', () => {
     response.assertStatus(200)
 
     const text = response.text()
-    console.log('Is text YAML?', text.startsWith('openapi:') || text.includes('/api/v1/customer/invoices/process'))
+    console.log(
+      'Is text YAML?',
+      text.startsWith('openapi:') || text.includes('/api/v1/customer/invoices/process')
+    )
 
     assert.include(text, '/api/v1/customer/invoices/process')
     assert.include(text, '/api/v1/customer/invoices')

@@ -10,7 +10,9 @@ import UserCustomer from '#models/user_customer'
 import CouponRedemption from '#models/coupon_redemption'
 
 export default class User extends compose(UserSchema, withAuthFinder(hash)) {
-  static accessTokens = DbAccessTokensProvider.forModel(User)
+  static accessTokens = DbAccessTokensProvider.forModel(User, {
+    expiresIn: '30 days',
+  })
   declare currentAccessToken?: AccessToken
 
   @hasOne(() => UserEstablishment)

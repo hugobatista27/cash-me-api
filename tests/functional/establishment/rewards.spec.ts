@@ -291,7 +291,7 @@ test.group('Functional | Establishment Rewards (Task #10 & ADR-002)', (group) =>
     const listRes = await client.get('/api/v1/establishments/rewards').loginAs(userA)
     listRes.assertStatus(200)
 
-    const listBody = listRes.body()
+    const listBody = listRes.body() as any[]
     assert.equal(listBody.length, 2)
     assert.isTrue(listBody.every((r: any) => r.establishmentId === establishmentA.id))
 

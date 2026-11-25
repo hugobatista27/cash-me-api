@@ -20,6 +20,8 @@ export default class DatabaseSeeder extends BaseSeeder {
 
     // 0. Limpeza prévia para garantir idempotência em caso de reexecução
     await db.rawQuery('PRAGMA foreign_keys = OFF;')
+    await db.from('coupon_redemptions').delete()
+    await db.from('rewards').delete()
     await db.from('invoice_items').delete()
     await db.from('point_transactions').delete()
     await db.from('invoices').delete()
@@ -68,7 +70,7 @@ export default class DatabaseSeeder extends BaseSeeder {
       complement: 'Bloco A',
       reference: 'Ao lado da Praça XV',
       latitude: -27.5954,
-      longitude: -48.5480,
+      longitude: -48.548,
     })
 
     // Usuário Lojista Admin do Estabelecimento 1
@@ -100,7 +102,7 @@ export default class DatabaseSeeder extends BaseSeeder {
       userId: userOperadorSC.id,
       establishmentId: establishmentSC.id,
       fullName: 'Fernanda Santos Oliveira',
-      role: 'OPERADOR',
+      role: 'LOJISTA_OPERADOR',
     })
 
     // Programa de Fidelidade e Regras de Pontuação do Estabelecimento 1
@@ -306,37 +308,37 @@ export default class DatabaseSeeder extends BaseSeeder {
       issuerState: 'SC',
       issuerCnpj: establishmentSC.cnpj,
       issuedAt: DateTime.now().minus({ hours: 2 }),
-      totalAmount: 154.50,
+      totalAmount: 154.5,
       items: [
         {
           rawDescription: 'Arroz Tipo 1 5kg',
           quantity: 1,
-          unitPrice: 28.50,
-          totalPrice: 28.50,
+          unitPrice: 28.5,
+          totalPrice: 28.5,
         },
         {
           rawDescription: 'Feijão Preto 1kg',
           quantity: 2,
-          unitPrice: 8.50,
-          totalPrice: 17.00,
+          unitPrice: 8.5,
+          totalPrice: 17.0,
         },
         {
           rawDescription: 'Azeite de Oliva Extra Virgem 500ml',
           quantity: 1,
-          unitPrice: 42.00,
-          totalPrice: 42.00,
+          unitPrice: 42.0,
+          totalPrice: 42.0,
         },
         {
           rawDescription: 'Café Torrado e Moído 500g',
           quantity: 2,
-          unitPrice: 18.50,
-          totalPrice: 37.00,
+          unitPrice: 18.5,
+          totalPrice: 37.0,
         },
         {
           rawDescription: 'Leite Integral 1L',
           quantity: 5,
-          unitPrice: 6.00,
-          totalPrice: 30.00,
+          unitPrice: 6.0,
+          totalPrice: 30.0,
         },
       ],
     })
@@ -355,31 +357,31 @@ export default class DatabaseSeeder extends BaseSeeder {
       issuerState: 'SC',
       issuerCnpj: establishmentSC.cnpj,
       issuedAt: DateTime.now().minus({ hours: 18 }),
-      totalAmount: 86.00,
+      totalAmount: 86.0,
       items: [
         {
           rawDescription: 'Pão Francês Tradicional Kg',
           quantity: 1,
-          unitPrice: 16.00,
-          totalPrice: 16.00,
+          unitPrice: 16.0,
+          totalPrice: 16.0,
         },
         {
           rawDescription: 'Queijo Muçarela Fatiado 500g',
           quantity: 1,
-          unitPrice: 32.00,
-          totalPrice: 32.00,
+          unitPrice: 32.0,
+          totalPrice: 32.0,
         },
         {
           rawDescription: 'Presunto Cozido Especial 400g',
           quantity: 1,
-          unitPrice: 18.00,
-          totalPrice: 18.00,
+          unitPrice: 18.0,
+          totalPrice: 18.0,
         },
         {
           rawDescription: 'Iogurte Natural 170g',
           quantity: 4,
-          unitPrice: 5.00,
-          totalPrice: 20.00,
+          unitPrice: 5.0,
+          totalPrice: 20.0,
         },
       ],
     })
@@ -397,19 +399,19 @@ export default class DatabaseSeeder extends BaseSeeder {
       issuerState: 'PR',
       issuerCnpj: establishmentPR.cnpj,
       issuedAt: DateTime.now().minus({ hours: 8 }),
-      totalAmount: 42.00,
+      totalAmount: 42.0,
       items: [
         {
           rawDescription: 'Cappuccino Italiano Grande',
           quantity: 1,
-          unitPrice: 18.00,
-          totalPrice: 18.00,
+          unitPrice: 18.0,
+          totalPrice: 18.0,
         },
         {
           rawDescription: 'Sanduíche Ciabatta com Presunto Parma',
           quantity: 1,
-          unitPrice: 24.00,
-          totalPrice: 24.00,
+          unitPrice: 24.0,
+          totalPrice: 24.0,
         },
       ],
     })
@@ -427,25 +429,25 @@ export default class DatabaseSeeder extends BaseSeeder {
       issuerState: 'PR',
       issuerCnpj: establishmentPR.cnpj,
       issuedAt: DateTime.now().minus({ hours: 5 }),
-      totalAmount: 75.00,
+      totalAmount: 75.0,
       items: [
         {
           rawDescription: 'Café Espresso Duplo Gourmet',
           quantity: 2,
-          unitPrice: 12.50,
-          totalPrice: 25.00,
+          unitPrice: 12.5,
+          totalPrice: 25.0,
         },
         {
           rawDescription: 'Croissant Francês com Manteiga',
           quantity: 2,
-          unitPrice: 16.00,
-          totalPrice: 32.00,
+          unitPrice: 16.0,
+          totalPrice: 32.0,
         },
         {
           rawDescription: 'Fatia Torta Banoffee Artesanal',
           quantity: 1,
-          unitPrice: 18.00,
-          totalPrice: 18.00,
+          unitPrice: 18.0,
+          totalPrice: 18.0,
         },
       ],
     })
@@ -462,7 +464,7 @@ export default class DatabaseSeeder extends BaseSeeder {
       issuerState: 'SC',
       issuerCnpj: establishmentSC.cnpj,
       issuedAt: DateTime.now().minus({ days: 4 }), // 4 dias atrás -> > 48h
-      totalAmount: 120.00,
+      totalAmount: 120.0,
     })
 
     console.log(
@@ -489,7 +491,7 @@ export default class DatabaseSeeder extends BaseSeeder {
       ruleId: null,
       ruleVersion: null,
       type: 'DEBIT',
-      points: -pointsToRedeem,
+      points: pointsToRedeem,
       purchaseAmount: null,
       appliedConversionFactor: null,
       description: 'Resgate de Cupom de R$ 10 de Desconto no Caixa',

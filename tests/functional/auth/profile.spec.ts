@@ -11,9 +11,7 @@ test.group('Functional | Profile & Logout', (group) => {
       password: 'password123',
     })
 
-    const response = await client
-      .get('/api/v1/account/profile')
-      .loginAs(user)
+    const response = await client.get('/api/v1/account/profile').loginAs(user)
 
     response.assertStatus(200)
     response.assertBodyContains({
@@ -23,7 +21,9 @@ test.group('Functional | Profile & Logout', (group) => {
     })
   })
 
-  test('should return 401 unauthorized when accessing profile without token', async ({ client }) => {
+  test('should return 401 unauthorized when accessing profile without token', async ({
+    client,
+  }) => {
     const response = await client.get('/api/v1/account/profile')
 
     response.assertStatus(401)
@@ -35,9 +35,7 @@ test.group('Functional | Profile & Logout', (group) => {
       password: 'password123',
     })
 
-    const response = await client
-      .post('/api/v1/account/logout')
-      .loginAs(user)
+    const response = await client.post('/api/v1/account/logout').loginAs(user)
 
     response.assertStatus(200)
     response.assertBodyContains({

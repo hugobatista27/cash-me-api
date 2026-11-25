@@ -43,7 +43,7 @@ export default class PointsEngineService {
     if (totalAmount <= 0 || conversionFactor <= 0) {
       return 0
     }
-    return Math.floor(totalAmount * conversionFactor)
+    return Math.floor(Number((totalAmount * conversionFactor).toFixed(6)))
   }
 
   /**
@@ -68,14 +68,19 @@ export default class PointsEngineService {
       return 0
     }
 
-    const baseAmount = Number(rule.baseAmount) || 1.0
-    const pointsPerBase = Number(rule.pointsPerBase) || 1
+    const baseAmount = Number(rule.baseAmount)
+    const pointsPerBase = Number(rule.pointsPerBase)
 
-    if (baseAmount <= 0 || pointsPerBase <= 0) {
+    if (
+      !Number.isFinite(baseAmount) ||
+      !Number.isFinite(pointsPerBase) ||
+      baseAmount <= 0 ||
+      pointsPerBase <= 0
+    ) {
       return 0
     }
 
-    let points = Math.floor(totalAmount / baseAmount) * pointsPerBase
+    let points = Math.floor(Number((totalAmount / baseAmount).toFixed(6))) * pointsPerBase
 
     if (rule.maxPointsPerPurchase && rule.maxPointsPerPurchase > 0) {
       points = Math.min(points, rule.maxPointsPerPurchase)
@@ -100,9 +105,7 @@ export default class PointsEngineService {
 
     // RN01: Validação de data de emissão (<= 48 horas)
     const issuedAt =
-      typeof data.issuedAt === 'string'
-        ? DateTime.fromISO(data.issuedAt)
-        : data.issuedAt
+      typeof data.issuedAt === 'string' ? DateTime.fromISO(data.issuedAt) : data.issuedAt
 
     const now = DateTime.now()
     const hoursDiff = now.diff(issuedAt, 'hours').hours
@@ -131,9 +134,10 @@ export default class PointsEngineService {
       }
     }
 
-    // RN07: Restrição geográfica (SC e PR)
+    // RN07: Restrição geográfica (SC e PR) - valida UF informada e prefixo IBGE da chave (41=PR, 42=SC)
     const allowedStates = ['SC', 'PR']
-    if (!allowedStates.includes(state)) {
+    const keyUfCode = cleanKey.slice(0, 2)
+    if (!allowedStates.includes(state) || (keyUfCode !== '41' && keyUfCode !== '42')) {
       const rejectedInvoice = await Invoice.create({
         customerId: customer.id,
         establishmentId: null,
@@ -325,8 +329,16 @@ export default class PointsEngineService {
         balance,
         establishment,
       }
-    } catch (error) {
+    } catch (error: any) {
       await trx.rollback()
+      const msg = String(error?.message || '')
+      if (
+        error?.code === 'SQLITE_CONSTRAINT_UNIQUE' ||
+        error?.code === '23505' ||
+        msg.includes('UNIQUE constraint failed: invoices.access_key')
+      ) {
+        throw new DuplicateInvoiceException()
+      }
       throw error
     }
   }

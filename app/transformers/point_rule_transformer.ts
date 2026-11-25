@@ -11,13 +11,13 @@ export default class PointRuleTransformer extends BaseTransformer<PointRule> {
         'version',
         'name',
         'status',
-        'baseAmount',
         'pointsPerBase',
-        'minPurchaseAmount',
         'maxPointsPerPurchase',
         'createdAt',
         'updatedAt',
       ]),
+      baseAmount: Number(this.resource.baseAmount),
+      minPurchaseAmount: Number(this.resource.minPurchaseAmount),
       humanReadableSummary: this.resource.humanReadableSummary,
     }
   }
