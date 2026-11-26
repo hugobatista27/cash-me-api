@@ -10,6 +10,7 @@
 |
 */
 
+import './node26_url_compat.js'
 process.env.NODE_ENV = 'test'
 
 import 'reflect-metadata'

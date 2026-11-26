@@ -13,6 +13,13 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
+    if ((error as { code?: string })?.code === 'E_INVALID_CREDENTIALS') {
+      return ctx.response.badRequest({
+        message: 'E-mail ou senha incorretos.',
+        code: 'E_INVALID_CREDENTIALS',
+      })
+    }
+
     return super.handle(error, ctx)
   }
 

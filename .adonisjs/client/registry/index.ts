@@ -240,6 +240,12 @@ const routes = {
     tokens: [{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"api","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"v1","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"establishment","end":""},{"old":"/api/v1/establishment/loyalty-rule","type":0,"val":"loyalty-rule","end":""}],
     types: placeholder as Registry['establishment.establishment_rules.update']['types'],
   },
+  'establishment.establishment_customers.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/establishment/customers',
+    tokens: [{"old":"/api/v1/establishment/customers","type":0,"val":"api","end":""},{"old":"/api/v1/establishment/customers","type":0,"val":"v1","end":""},{"old":"/api/v1/establishment/customers","type":0,"val":"establishment","end":""},{"old":"/api/v1/establishment/customers","type":0,"val":"customers","end":""}],
+    types: placeholder as Registry['establishment.establishment_customers.index']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

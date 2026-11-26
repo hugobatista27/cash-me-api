@@ -84,5 +84,8 @@ export interface ApiDefinition {
       history: typeof routes['establishment.establishment_rules.history']
       update: typeof routes['establishment.establishment_rules.update']
     }
+    establishmentCustomers: {
+      index: typeof routes['establishment.establishment_customers.index']
+    }
   }
 }

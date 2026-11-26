@@ -38,6 +38,8 @@ const EstablishmentsController = () => import('#controllers/establishments_contr
 const EstablishmentRulesController = () => import('#controllers/establishment_rules_controller')
 const EstablishmentRewardsController = () => import('#controllers/establishment_rewards_controller')
 const EstablishmentCouponsController = () => import('#controllers/establishment_coupons_controller')
+const EstablishmentCustomersController = () =>
+  import('#controllers/establishment_customers_controller')
 
 router
   .group(() => {
@@ -160,6 +162,7 @@ router
         router
           .put('loyalty-rule', [EstablishmentRulesController, 'update'])
           .use(middleware.role(['LOJISTA_ADMIN', 'SUPER_ADMIN']))
+        router.get('customers', [EstablishmentCustomersController, 'index'])
       })
       .prefix('establishment')
       .as('establishment')

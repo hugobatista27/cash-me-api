@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import PointsEngineService, { DuplicateInvoiceException } from '#services/points_engine_service'
+import SefazNfceService, { SefazVerificationException } from '#services/sefaz_nfce_service'
 import { processInvoiceValidator } from '#validators/invoice_validator'
 import InvoiceTransformer from '#transformers/invoice_transformer'
 import PointBalanceTransformer from '#transformers/point_balance_transformer'
@@ -9,7 +10,10 @@ import { inject } from '@adonisjs/core'
 
 @inject()
 export default class CustomerInvoicesController {
-  constructor(protected pointsEngine: PointsEngineService) {}
+  constructor(
+    protected pointsEngine: PointsEngineService,
+    protected sefazService: SefazNfceService
+  ) {}
 
   /**
    * @process
@@ -28,7 +32,8 @@ export default class CustomerInvoicesController {
     const payload = await request.validateUsing(processInvoiceValidator)
 
     try {
-      const result = await this.pointsEngine.processInvoice(user.customerProfile, payload)
+      const verifiedPayload = await this.sefazService.verifyAndEnrich(payload)
+      const result = await this.pointsEngine.processInvoice(user.customerProfile, verifiedPayload)
 
       return serialize({
         invoice: InvoiceTransformer.transform(result.invoice),
@@ -45,6 +50,12 @@ export default class CustomerInvoicesController {
         return response.conflict({
           message: error.message,
           code: 'E_DUPLICATE_INVOICE',
+        })
+      }
+      if (error instanceof SefazVerificationException) {
+        return response.unprocessableEntity({
+          message: error.message,
+          code: 'E_SEFAZ_VERIFICATION_FAILED',
         })
       }
       throw error

@@ -11,6 +11,7 @@
 |
 */
 
+import './node26_url_compat.js'
 await import('reflect-metadata')
 const { Ignitor, prettyPrintError } = await import('@adonisjs/core')
 

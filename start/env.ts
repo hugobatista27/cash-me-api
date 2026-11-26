@@ -24,4 +24,15 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   // Session
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
+
+  // Database (PostgreSQL para produção / SQLite padrão local)
+  DB_CONNECTION: Env.schema.enum.optional(['sqlite', 'pg'] as const),
+  DB_HOST: Env.schema.string.optional({ format: 'host' }),
+  DB_PORT: Env.schema.number.optional(),
+  DB_USER: Env.schema.string.optional(),
+  DB_PASSWORD: Env.schema.string.optional(),
+  DB_DATABASE: Env.schema.string.optional(),
+
+  // NFC-e SEFAZ verification
+  NFCE_VERIFY_SEFAZ: Env.schema.boolean.optional(),
 })

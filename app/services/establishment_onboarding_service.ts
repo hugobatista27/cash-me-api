@@ -56,7 +56,7 @@ export default class EstablishmentOnboardingService {
     try {
       const user = await User.create(
         {
-          email: payload.user.email,
+          email: payload.user.email.trim().toLowerCase(),
           password: payload.user.password,
           userType: 'ESTABLISHMENT',
           status: 'ACTIVE',

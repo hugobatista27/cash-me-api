@@ -43,6 +43,7 @@ export type ScannedRoutes = {
     'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.update': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_customers.index': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -62,6 +63,7 @@ export type ScannedRoutes = {
     'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_customers.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -81,6 +83,7 @@ export type ScannedRoutes = {
     'establishment.establishment_rules.show': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.simulate': { paramsTuple?: []; params?: {} }
     'establishment.establishment_rules.history': { paramsTuple?: []; params?: {} }
+    'establishment.establishment_customers.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }

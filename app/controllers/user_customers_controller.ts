@@ -20,7 +20,7 @@ export default class UserCustomersController {
     const { user, customerProfile } = await db.transaction(async (trx) => {
       const createdUser = await User.create(
         {
-          email: payload.email,
+          email: payload.email.trim().toLowerCase(),
           password: payload.password,
           userType: 'CUSTOMER',
           status: 'ACTIVE',

@@ -1,4 +1,5 @@
 import User from '#models/user'
+import Establishment from '#models/establishment'
 import { loginValidator } from '#validators/user'
 import type { HttpContext } from '@adonisjs/core/http'
 import UserTransformer from '#transformers/user_transformer'
@@ -15,8 +16,9 @@ export default class AccessTokensController {
    */
   async store({ request, response, serialize }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
+    const normalizedEmail = email.trim().toLowerCase()
 
-    const user = await User.verifyCredentials(email, password)
+    const user = await User.verifyCredentials(normalizedEmail, password)
 
     if (user.status !== 'ACTIVE') {
       return response.forbidden({
@@ -41,13 +43,12 @@ export default class AccessTokensController {
       await user.load((loader) => loader.load('establishmentProfile'))
       if (user.establishmentProfile) {
         if (user.establishmentProfile.establishmentId) {
-          await user.establishmentProfile.load('establishment', (query) => {
-            query.preload('address')
-          })
-          if (user.establishmentProfile.establishment) {
-            establishment = EstablishmentTransformer.transform(
-              user.establishmentProfile.establishment
-            )
+          const est = await Establishment.query()
+            .where('id', user.establishmentProfile.establishmentId)
+            .preload('address')
+            .first()
+          if (est) {
+            establishment = EstablishmentTransformer.transform(est)
           }
         }
         profile = UserEstablishmentTransformer.transform(user.establishmentProfile)

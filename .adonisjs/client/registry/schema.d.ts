@@ -475,4 +475,16 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_rules_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'establishment.establishment_customers.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/establishment/customers'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/establishment_customers_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/establishment_customers_controller').default['index']>>>
+    }
+  }
 }

@@ -62,7 +62,7 @@ export default class UserEstablishmentsController {
     const { user, establishmentProfile } = await db.transaction(async (trx) => {
       const createdUser = await User.create(
         {
-          email: payload.email,
+          email: payload.email.trim().toLowerCase(),
           password: payload.password,
           userType: 'ESTABLISHMENT',
           status: 'ACTIVE',

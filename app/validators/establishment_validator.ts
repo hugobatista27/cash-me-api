@@ -76,7 +76,7 @@ export const updateAddressValidator = vine.create({
 export const onboardingEstablishmentValidator = vine.create({
   user: vine.object({
     fullName: vine.string().trim().minLength(2).maxLength(255),
-    email: email().unique({ table: 'users', column: 'email' }),
+    email: email().unique({ table: 'users', column: 'email', caseInsensitive: true }),
     password: password(),
     passwordConfirmation: password().sameAs('password'),
   }),
